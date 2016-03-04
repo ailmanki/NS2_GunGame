@@ -1,0 +1,13 @@
+shader = "shaders/ColoredSkinsExo.surface_shader"
+
+albedoMap = "models/marine/exosuit/claw.dds"
+normalMap = "models/marine/exosuit/claw_normal.dds"
+specularMap = "models/marine/exosuit/claw_spec.dds"
+emissiveMap = "materials/dev/black.dds"
+
+modelColorMap = "models/marine/exosuit/claw_colorMap.dds"
+
+numColumns = 1
+numRows = 2
+
+surface = "metal"

@@ -1,0 +1,10 @@
+shader = "shaders/ColoredSkins_Emissive.surface_shader"
+
+emissiveMap = "models/marine/male/male_assault_visor.dds"
+
+modelColorMap = "models/marine/male/male_assault_visor_colorMap.dds"
+numColumns = 1
+numRows = 1
+
+colorMapIndex = 0
+surface = "organic"
