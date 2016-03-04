@@ -1,4 +1,0 @@
-shader = "shaders/ViewModel.surface_shader"
-albedoMap = "models/marine/female/female_kodiak_view.dds"
-normalMap = "models/marine/female/Female_view_v1_normal.dds"
-specularMap = "models/marine/female/female_kodiak_view_spec.dds"

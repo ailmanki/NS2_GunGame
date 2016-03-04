@@ -1,5 +1,0 @@
-shader = "shaders/ViewModel_emissive.surface_shader"
-albedoMap = "models/marine/female/female_view_tundra.dds"
-normalMap = "models/marine/female/female_view_v2_normal.dds"
-specularMap = "models/marine/female/female_view_tundra_spec.dds"
-emissiveMap = "models/marine/female/female_view_tundra_illum.dds"

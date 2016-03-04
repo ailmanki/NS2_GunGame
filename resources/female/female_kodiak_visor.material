@@ -1,3 +1,0 @@
-shader = "shaders/Emissive.surface_shader"
-emissiveMap = "models/marine/female/female_kodiak_visor.dds"
-surface = "organic"

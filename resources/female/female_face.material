@@ -1,4 +1,0 @@
-shader = "models/marine/marine_noemissive.surface_shader"
-albedoMap = "models/marine/female/female_face.dds"
-normalMap = "models/marine/female/female_face_normal.dds"
-specularMap = "models/marine/female/female_face_spec.dds"
