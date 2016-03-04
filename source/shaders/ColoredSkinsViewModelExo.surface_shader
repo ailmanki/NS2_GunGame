@@ -1,0 +1,172 @@
+<shader>
+	
+	<inputs>
+		<input name="albedoMap" type="texture" address="wrap" />
+		<input name="normalMap" type="texture" address="wrap" />
+		<input name="specularMap" type="texture" address="wrap" />
+		
+		<input name="modelColorMap" type="texture" address="wrap" />
+		
+		<input name="colorizeModel" type="float">1</input>
+		
+		<input name="colorMapIndex" type="float">0</input>
+		<input name="numColumns" type="float">1</input>
+		<input name="numRows" type="float">4</input>
+		
+		<input name="modelColorBaseR" type="float">0</input>
+		<input name="modelColorBaseG" type="float">0</input>
+		<input name="modelColorBaseB" type="float">0</input>
+		
+		<input name="modelColorAccentR" type="float">0</input>
+		<input name="modelColorAccentG" type="float">0</input>
+		<input name="modelColorAccentB" type="float">0</input>
+		
+		<input name="modelColorTrimR" type="float">0</input>
+		<input name="modelColorTrimG" type="float">0</input>
+		<input name="modelColorTrimB" type="float">0</input>
+		
+	</inputs>
+	
+	<code>
+	<![CDATA[		
+		
+	//rgb_to_hsv_no_clip() & hsv_to_rgb() & BlendColor() copied from under Ms-PL License:
+	// http://wpfslblendmodefx.codeplex.com/SourceControl/latest#WPF35SL3/WPFSLBlendModeFx/WPFBlendModeEffectLibrary/ShaderSource/OverlayEffect.fx
+		
+		float3 rgb_to_hsv_no_clip( float3 RGB ) {
+		
+			float3 HSV;
+			
+			float minChannel = min( min( RGB.x, RGB.y ), RGB.z );
+			float maxChannel = max( max( RGB.x, RGB.y ), RGB.z );
+
+			HSV.xy = 0;
+			HSV.z = maxChannel;
+			float delta = maxChannel - minChannel; // delta RGB value
+
+			// if gray, leave H & S at zero
+			if (delta != 0)
+			{
+				HSV.y = delta / HSV.z;
+				float3 delRGB;
+				delRGB =  (HSV.zzz - RGB + 3 * delta ) / (6.0 * delta);
+				if      ( RGB.x == HSV.z ) HSV.x = delRGB.z - delRGB.y;
+				else if ( RGB.y == HSV.z ) HSV.x = ( 1.0/3.0) + delRGB.x - delRGB.z;
+				else                       HSV.x = ( 2.0/3.0) + delRGB.y - delRGB.x;
+			}
+
+			return HSV;
+		}
+
+		float3 hsv_to_rgb(float3 HSV) {
+		
+			float3 RGB = HSV.z;
+			float var_h = HSV.x * 6;
+			float var_i = floor(var_h); // Or ... var_i = floor( var_h )
+			float var_1 = HSV.z * (1.0 - HSV.y);
+			float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
+			float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
+			
+			if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
+			else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
+			else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
+			else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
+			else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
+			else                 { RGB = float3(HSV.z, var_1, var_2); }
+			
+			return RGB;
+		}
+		
+		float3 BlendColor( float3 base, float3 blend ) {
+			
+			float3 blendHSV = rgb_to_hsv_no_clip( blend );
+			return hsv_to_rgb( float3 ( blendHSV.x, blendHSV.y, rgb_to_hsv_no_clip( base ).z ) );
+			
+		}
+	
+		float3 DecodeNormal(const float4 texNormal)
+		{
+			float4 n = texNormal * 2 - 1;
+			//return float3(n.a, n.g, sqrt(1 - dot(n.ag, n.ag)) );
+			return n.xyz;
+		}
+		
+		void MaterialShader(in Material_Input input, inout Material material)
+		{
+		
+			float4 specularGloss = tex2D(specularMap, input.texCoord);
+		
+			//material.albedo 	= tex2D(albedoMap, input.texCoord).rgb;
+			material.tsNormal 	= DecodeNormal( tex2D(normalMap, input.texCoord) );
+			material.specular	= specularGloss.rgb;
+			material.gloss		= specularGloss.a;
+			
+			
+			//Setup, "rebuild skin colors" since we can't pass float3, Vector, or Color to a material
+			float3 modelColorBase = float3( modelColorBaseR, modelColorBaseG, modelColorBaseB );
+			float3 modelColorAccent = float3( modelColorAccentR, modelColorAccentG, modelColorAccentB );
+			float3 modelColorTrim = float3( modelColorTrimR, modelColorTrimG, modelColorTrimB );
+			
+			float3 albedoTex = tex2D( albedoMap, input.texCoord ).rgb;	//No Alpha channel due to Deferred.hlsl - struct Material{}
+			
+			float2 colorMapUV = input.texCoord;
+			if( colorMapIndex >= 0 ) {
+				float row = floor( colorMapIndex / numColumns );
+				float col = colorMapIndex - row * numColumns;
+			
+				colorMapUV.x = ( col + colorMapUV.x ) / numColumns;
+				colorMapUV.y = ( row + colorMapUV.y ) / numRows;
+			}
+			
+			float4 modelColorMapTex = tex2D( modelColorMap, colorMapUV ).rgba;
+			
+			// un-premultiply the blendColor alpha out from blendColor
+			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, 0, 1 );	//OpenGL support, saturate() not in GLSL
+			
+			
+			float3 modBaseAlbedoTex = albedoTex;
+			float3 grayAlbedoMap = dot( albedoTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey
+			
+			if( modelColorMapTex.a > 0 ) {
+			//Apply gray-scale of teamColorMap to albedo to effect shapes/patterns before color is blended in
+			//Note: some detail of the original albedo texture is lost in the process
+				modBaseAlbedoTex = lerp( grayAlbedoMap.rgb, grayAlbedoMap.rgb + modelColorMapTex.rgb, modelColorMapTex.a);
+			}
+			
+			
+			float3 blackColor = float3(0.001,0.001,0.001);
+			float3 tmpColor = float3(0,0,0);
+			
+			if( modelColorMapTex.a > 0 ) {
+				// apply the blend mode math - Hue & Saturation
+				if( modelColorBase.r > 0 && modelColorBase.g > 0 && modelColorBase.b > 0 ) {
+					tmpColor += BlendColor( modBaseAlbedoTex.rgb, modelColorBase.rgb ) * modelColorMapTex.r;
+				} else {
+					tmpColor += albedoTex;
+				}
+				
+				if( modelColorAccent.r > 0 && modelColorAccent.g > 0 && modelColorAccent.b > 0 ) {
+					tmpColor += BlendColor( modBaseAlbedoTex.rgb, modelColorAccent.rgb ) * modelColorMapTex.g;
+				}
+				
+				if( modelColorTrim.r > 0 && modelColorTrim.g > 0 && modelColorTrim.b > 0 ) {
+					tmpColor += BlendColor( modBaseAlbedoTex.rgb, modelColorTrim.rgb ) * modelColorMapTex.b;
+				}
+				
+			} else {
+				tmpColor += albedoTex.rgb;
+			}
+			
+			if( colorizeModel == 1 && modelColorMapTex.a > 0 ) {
+				material.albedo = (1 - modelColorMapTex.a) * albedoTex.rgb + tmpColor.rgb * modelColorMapTex.a;
+			} else {
+				material.albedo = albedoTex;
+			}
+			
+			material.id = 1;
+			
+		}
+	]]>		
+	</code>
+
+</shader>

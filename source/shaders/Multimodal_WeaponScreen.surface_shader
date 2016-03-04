@@ -1,0 +1,29 @@
+<shader>
+	
+	<inputs>
+		<input name="emissiveMap" type="texture" address="wrap" srgb="true"/>
+		<input name="emissiveMap2" type="texture" address="wrap" srgb="true"/>
+		<input name="screenMapIdx" type="float">0.0</input>
+		<input name="hiddenAmount" type="float">0.0</input>
+	</inputs>
+	
+	<code>
+	<![CDATA[
+		void MaterialShader(in Material_Input input, inout Material material)
+		{
+			float f           = 1 - hiddenAmount;
+			float4 tex = float4(0,0,0,0);
+			
+			if( screenMapIdx == 0 ) {
+				tex = tex2D( emissiveMap, input.texCoord );
+			} else if( screenMapIdx == 1 ) {
+				tex = tex2D( emissiveMap2, input.texCoord );
+			}
+			
+			material.emissive = tex.rgb * input.color.rgb;
+			material.opacity  = tex.a * input.color.a *f;
+		}
+	]]>
+	</code>
+
+</shader>

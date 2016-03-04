@@ -1,0 +1,18 @@
+shader = "shaders/ColoredSkins.surface_shader"
+
+albedoMap = "models/marine/male/male_special_face.dds"
+normalMap = "models/marine/male/male_special_face_normal.dds"
+emissiveMap = "models/marine/male/male_special_face_illum.dds"
+specularMap = "models/marine/male/male_special_face_spec.dds"
+
+modelColorMap = "models/marine/male/male_special_face_colorMap.dds"
+numColumns = 1
+numRows = 1
+colorMapIndex = 0
+
+modelColorAccentR = 0.756
+modelColorAccentG = 0.982
+modelColorAccentB = 1
+
+
+surface = "organic"

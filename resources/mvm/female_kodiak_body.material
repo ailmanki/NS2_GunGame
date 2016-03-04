@@ -1,0 +1,10 @@
+shader = "shaders/ColoredSkins.surface_shader"
+
+albedoMap = "models/marine/female/female_kodiak_body.dds"
+normalMap = "models/marine/female/female_body_normal.dds"
+specularMap = "models/marine/female/female_body_spec.dds"
+emissiveMap = "models/marine/female/female_body_illum.dds"
+
+modelColorMap = "models/marine/female/female_body_colorMap.dds"
+numColumns=1
+numRows=2

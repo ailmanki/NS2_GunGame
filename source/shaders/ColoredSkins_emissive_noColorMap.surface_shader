@@ -1,0 +1,71 @@
+<shader>
+	
+	<inputs>
+		<input name="emissiveMap" type="texture" address="wrap" srgb="true"/>
+		
+		<input name="modelColorBaseR" type="float">0.0</input>
+		<input name="modelColorBaseG" type="float">0.0</input>
+		<input name="modelColorBaseB" type="float">0.0</input>
+		
+		<input name="modelColorAccentR" type="float">0.0</input>
+		<input name="modelColorAccentG" type="float">0.0</input>
+		<input name="modelColorAccentB" type="float">0.0</input>
+		
+		<input name="brightenFactor" type="float">0.0</input>
+		
+	</inputs>
+	
+	<code>
+	<![CDATA[
+		//Note: this is a special use-case surface shader. Only meant to colorize cinematics
+		//all color values are static and set via model's materials that is used in cinematic
+		
+		float3 BlendColorOverlay( float3 texColor, float3 blendColor ) 
+		//Spcefic to handling emissive colorization in similar to Photoshop's Overlay layer blend-mode
+		{
+			float3 resultColor;
+			
+			if (texColor.r > 0.5) {
+				resultColor.r = 1 - (1 - 2 * (texColor.r - 0.5)) * (1 - blendColor.r);
+			} else {
+				resultColor.r = (2 * texColor.r) * blendColor.r;
+			}
+
+			if (texColor.g > 0.5) {
+				resultColor.g = 1 - (1 - 2 * (texColor.g - 0.5)) * (1 - blendColor.g);
+			} else {
+				resultColor.g = (2 * texColor.g) * blendColor.g;
+			}
+			
+			if (texColor.b > 0.5) {
+				resultColor.b = 1 - (1 - 2 * (texColor.b - 0.5)) * (1 - blendColor.b);
+			} else {
+				resultColor.b = (2 * texColor.b) * blendColor.b;
+			}
+			
+			return resultColor;
+		}
+		
+		void MaterialShader(in Material_Input input, inout Material material)
+		{
+			
+			float3 modelColorBase = float3( modelColorBaseR, modelColorBaseG, modelColorBaseB );
+			float3 modelColorAccent = float3( modelColorAccentR, modelColorAccentG, modelColorAccentB );
+			
+			float4 emissiveTex = tex2D( emissiveMap, input.texCoord).rgba;
+			
+			float3 greyEmissive = dot( emissiveTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey
+			
+			float3 emissive = BlendColorOverlay( greyEmissive.rgb, modelColorAccent.rgb );
+			if( brightenFactor > 0 ) {
+				emissive = emissive * brightenFactor;
+			}
+			
+			material.emissive = emissive;
+			material.opacity  = emissiveTex.a * input.color.a;
+			
+		}
+	]]>		
+	</code>
+
+</shader>

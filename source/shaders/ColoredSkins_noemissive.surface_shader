@@ -1,0 +1,200 @@
+﻿<shader>
+	
+	<inputs>
+		<input name="albedoMap" type="texture" address="wrap" />
+		<input name="normalMap" type="texture" address="wrap" />
+		<input name="specularMap" type="texture" address="wrap" />
+		
+		<input name="blendMap" type="texture" address="wrap">materials/effects/mesh_effects/skulk_view_blood.dds</input>
+		<input name="overlayMap" type="texture" address="wrap">materials/effects/mesh_effects/nanoshield_circuit.dds</input>
+		
+		<input name="hiddenAmount" type="float">0.0</input>
+		
+		
+		<input name="modelColorMap" type="texture" address="wrap" />
+		
+		<!-- Atlas texture behavior data -->
+		<input name="colorMapIndex" type="float">0</input>
+		<input name="numColumns" type="float">1</input>
+		<input name="numRows" type="float">4</input>
+		
+		<input name="modelColorBaseR" type="float">0.0</input>
+		<input name="modelColorBaseG" type="float">0.0</input>
+		<input name="modelColorBaseB" type="float">0.0</input>
+		
+		<input name="modelColorAccentR" type="float">0.0</input>
+		<input name="modelColorAccentG" type="float">0.0</input>
+		<input name="modelColorAccentB" type="float">0.0</input>
+		
+		<input name="modelColorTrimR" type="float">0.0</input>
+		<input name="modelColorTrimG" type="float">0.0</input>
+		<input name="modelColorTrimB" type="float">0.0</input>
+		
+	</inputs>
+	
+	<params>
+		<param name="alphaTest">true</param>
+	</params>
+	
+	<code>
+	<![CDATA[
+		float paramQuick(float x, float p) {
+			return pow(x,p);
+		}
+		
+		float paramSlow(float x, float p) {
+			return 1 - pow(abs(x),p);
+		}
+
+		float3 DecodeNormal(const float4 texNormal)
+		{
+			float4 n = texNormal * 2 - 1;
+			return n.xyz;
+		}
+		
+		
+	//rgb_to_hsv_no_clip() & hsv_to_rgb() & BlendColor() copied from under Ms-PL License:
+	// http://wpfslblendmodefx.codeplex.com/SourceControl/latest#WPF35SL3/WPFSLBlendModeFx/WPFBlendModeEffectLibrary/ShaderSource/OverlayEffect.fx
+		
+		float3 rgb_to_hsv_no_clip( float3 RGB ) {
+		
+			float3 HSV;
+			
+			float minChannel = min( min( RGB.x, RGB.y ), RGB.z );
+			float maxChannel = max( max( RGB.x, RGB.y ), RGB.z );
+
+			HSV.xy = 0;
+			HSV.z = maxChannel;
+			float delta = maxChannel - minChannel; // delta RGB value
+
+			// if gray, leave H & S at zero
+			if (delta != 0)
+			{
+				HSV.y = delta / HSV.z;
+				float3 delRGB;
+				delRGB =  (HSV.zzz - RGB + 3 * delta ) / (6.0 * delta);
+				if      ( RGB.x == HSV.z ) HSV.x = delRGB.z - delRGB.y;
+				else if ( RGB.y == HSV.z ) HSV.x = ( 1.0/3.0) + delRGB.x - delRGB.z;
+				else                       HSV.x = ( 2.0/3.0) + delRGB.y - delRGB.x;
+			}
+
+			return HSV;
+		}
+
+		float3 hsv_to_rgb(float3 HSV) {
+		
+			float3 RGB = HSV.z;
+			float var_h = HSV.x * 6;
+			float var_i = floor(var_h); // Or ... var_i = floor( var_h )
+			float var_1 = HSV.z * (1.0 - HSV.y);
+			float var_2 = HSV.z * (1.0 - HSV.y * (var_h-var_i));
+			float var_3 = HSV.z * (1.0 - HSV.y * (1-(var_h-var_i)));
+			
+			if      (var_i == 0) { RGB = float3(HSV.z, var_3, var_1); }
+			else if (var_i == 1) { RGB = float3(var_2, HSV.z, var_1); }
+			else if (var_i == 2) { RGB = float3(var_1, HSV.z, var_3); }
+			else if (var_i == 3) { RGB = float3(var_1, var_2, HSV.z); }
+			else if (var_i == 4) { RGB = float3(var_3, var_1, HSV.z); }
+			else                 { RGB = float3(HSV.z, var_1, var_2); }
+			
+			return RGB;
+		}
+		
+		float3 BlendColor( float3 base, float3 blend ) {
+			
+			float3 blendHSV = rgb_to_hsv_no_clip( blend );
+			return hsv_to_rgb( float3 ( blendHSV.x, blendHSV.y, rgb_to_hsv_no_clip( base ).z ) );
+			
+		}
+		
+		
+		void MaterialShader(in Material_Input input, inout Material material)
+		{
+			
+			float f             = 1 - hiddenAmount;
+			
+			float param         = tex2D(blendMap, input.texCoord * 2.5).a; // speading parameter
+			float textureSpeed  = 2;
+			float destroySpeed  = 1;
+		
+			float4 specularGloss = tex2D(specularMap, input.texCoord);
+			material.tsNormal 	= DecodeNormal( tex2D(normalMap, input.texCoord) );			
+			material.specular	= specularGloss.rgb;
+			material.gloss		= specularGloss.a;
+			
+			float opacity       = paramSlow(param,destroySpeed);
+			float blend         = paramQuick(param,textureSpeed);
+			
+			
+			//Setup, "rebuild skin colors" since we can't pass float3, Vector, or Color to a material
+			float3 modelColorBase = float3( modelColorBaseR, modelColorBaseG, modelColorBaseB );
+			float3 modelColorAccent = float3( modelColorAccentR, modelColorAccentG, modelColorAccentB );
+			float3 modelColorTrim = float3( modelColorTrimR, modelColorTrimG, modelColorTrimB );
+			
+			float3 albedoTex = tex2D( albedoMap, input.texCoord ).rgb;	//No Alpha channel due to Deferred.hlsl - struct Material{}
+			
+			float2 colorMapUV = input.texCoord;
+			if( colorMapIndex >= 0 ) {
+				float row = floor( colorMapIndex / numColumns );
+				float col = colorMapIndex - row * numColumns;
+			
+				colorMapUV.x = ( col + colorMapUV.x ) / numColumns;
+				colorMapUV.y = ( row + colorMapUV.y ) / numRows;
+			}
+			
+			float4 modelColorMapTex = tex2D( modelColorMap, colorMapUV ).rgba;
+			//float4 modelColorMapTex = tex2D( modelColorMap, input.texCoord ).rgba;
+			
+			float4 tmpColor = float4(0.0, 0.0, 0.0, 0.0);
+			
+			// un-premultiply the blendColor alpha out from blendColor
+			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, 0.0, 1.0 );	//OpenGL support, saturate() not in GLSL
+			
+			float3 modBaseAlbedoTex = albedoTex;
+			float3 grayAlbedoMap = dot( albedoTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey
+			
+			if( modelColorMapTex.a > 0.0 ) {
+			//Apply gray-scale of modelColorMap to albedo to effect shapes/patterns before color is blended in
+				modBaseAlbedoTex = lerp( grayAlbedoMap.rgb, grayAlbedoMap.rgb + modelColorMapTex.rgb, modelColorMapTex.a);
+			}
+
+			//TODO Add support for three team colors, one per channel of colorMapTex(RGB)
+			
+			// apply the blend mode math - Hue & Saturation
+			tmpColor.rgb = BlendColor( modBaseAlbedoTex.rgb, tempModelColorBase.rgb ); //Uses modified albedo
+			
+			// re-multiply the tempTeamColorBase alpha in to blendColor, weight tmpColor according to blendColor.a
+			if( modelColorBase.r == 0 && modelColorBase.g == 0 && modelColorBase.b == 0 ) {
+			//FIXME The above is a seriously lazy/lame way to hack in support for black team colors
+				material.albedo = (1 - modelColorMapTex.a) * albedoTex.rgb - tmpColor.rgb * modelColorMapTex.a;
+			} else {
+				material.albedo = (1 - modelColorMapTex.a) * albedoTex.rgb + tmpColor.rgb * modelColorMapTex.a;
+			}
+	
+	
+			// Blending
+			if (blend + f > 1) {
+				
+				material.emissive  = float3(0, 0, 0);
+				
+			} else {
+			
+				float3 dissolveModelColor = modelColorAccent * 50;
+				float4 greyOverlayMap = dot( tex2D( overlayMap, input.texCoord * float2(10, 9) ), float3(0.5, 0.5, 0.5) );
+				material.emissive = (1 - (blend + f)) * greyOverlayMap.rgb * dissolveModelColor;
+				
+			}
+			
+			// Opacity
+			material.opacity = opacity + f - 0.5;
+			if (material.opacity < 0.5) {
+				material.emissive   = 0;
+			}
+			
+			material.id = 1; // To make it show up on alien vision
+			
+		}
+	]]>
+	</code>
+
+</shader>

@@ -1,0 +1,10 @@
+shader = "shaders/ColoredSkinsViewModel.surface_shader"
+
+albedoMap = "models/marine/female/female_assault_view.dds"
+normalMap = "models/marine/female/female_assault_view_normal.dds"
+specularMap = "models/marine/female/female_assault_view_spec.dds"
+
+modelColorMap = "models/marine/female/female_assault_view_colormap.dds"
+
+numColumns = 1
+numRows = 2

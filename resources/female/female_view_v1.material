@@ -1,0 +1,4 @@
+shader = "shaders/ViewModel.surface_shader"
+albedoMap = "models/marine/female/female_view_v1.dds"
+normalMap = "models/marine/female/female_view_v1_normal.dds"
+specularMap = "models/marine/female/female_view_v1_spec.dds"

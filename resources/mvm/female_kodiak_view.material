@@ -1,0 +1,11 @@
+shader = "shaders/ColoredSkinsViewModel.surface_shader"
+
+albedoMap = "models/marine/female/female_kodiak_view.dds"
+normalMap = "models/marine/female/female_view_v1_normal.dds"
+specularMap = "models/marine/female/female_view_v1_spec.dds"
+
+modelColorMap = "models/marine/female/female_view_v1_colorMap.dds"
+numRows = 2
+numColumns = 1
+
+surface = "organic"

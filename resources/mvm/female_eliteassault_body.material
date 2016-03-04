@@ -1,0 +1,27 @@
+shader = "shaders/ColoredSkins.surface_shader"
+
+albedoMap = "models/marine/female/female_assault_body.dds"
+normalMap = "models/marine/female/female_assault_body_normal.dds"
+specularMap = "models/marine/female/female_assault_body_spec.dds"
+emissiveMap = "models/marine/male/illum.dds"
+
+modelColorMap = "models/marine/female/female_assault_body_colormap.dds"
+
+numColumns = 1
+numRows = 2
+colorMapIndex = 1
+
+
+modelColorBaseR = 0.15
+modelColorBaseG = 0.075
+modelColorBaseB = 0.015
+
+modelColorAccentR = 1
+modelColorAccentG = 0
+modelColorAccentB = 0
+
+modelColorTrimR = 0.18
+modelColorTrimG = 0.15
+modelColorTrimB = 0.095
+
+surface = "organic"

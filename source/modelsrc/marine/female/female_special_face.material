@@ -1,0 +1,13 @@
+shader = "shaders/ColoredSkins.surface_shader"
+
+albedoMap = "models/marine/female/female_special_face.dds"
+normalMap = "models/marine/female/female_special_face_normal.dds"
+specularMap = "models/marine/female/female_special_face_spec.dds"
+emissiveMap = "models/marine/female/female_special_face_illum.dds"
+
+modelColorMap = "models/marine/female/female_special_face_colorMap.dds"
+
+numColumns = 1
+numRows = 1
+
+surface = "organic"

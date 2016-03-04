@@ -1,0 +1,87 @@
+<shader>
+	
+	<inputs>
+		<input name="albedoMap" type="texture" address="wrap" />
+		<input name="normalMap" type="texture" address="wrap" />
+		<input name="specularMap" type="texture" address="wrap" />
+		<input name="emissiveMap" type="texture" address="wrap" srgb="true"/>
+		<input name="opacityMap" type="texture" address="wrap" />
+		
+		<input name="modelColorBaseR" type="float">0.0</input>
+		<input name="modelColorBaseG" type="float">0.0</input>
+		<input name="modelColorBaseB" type="float">0.0</input>
+		
+		<input name="modelColorAccentR" type="float">0.0</input>
+		<input name="modelColorAccentG" type="float">0.0</input>
+		<input name="modelColorAccentB" type="float">0.0</input>
+		
+	</inputs>
+
+	<params>
+		<param name="alphaTest">true</param>
+	</params>
+	
+	<code>
+	<![CDATA[
+		//Note: this is a special use-case surface shader. Only meant to colorize cinematics
+		//all color values are static and set via model's materials that is used in cinematic
+		
+		float3 BlendColorOverlay( float3 texColor, float3 blendColor ) 
+		//Spcefic to handling emissive colorization in similar to Photoshop's Overlay layer blend-mode
+		{
+			float3 resultColor;
+			
+			if (texColor.r > 0.5) {
+				resultColor.r = 1 - (1 - 2 * (texColor.r - 0.5)) * (1 - blendColor.r);
+			} else {
+				resultColor.r = (2 * texColor.r) * blendColor.r;
+			}
+
+			if (texColor.g > 0.5) {
+				resultColor.g = 1 - (1 - 2 * (texColor.g - 0.5)) * (1 - blendColor.g);
+			} else {
+				resultColor.g = (2 * texColor.g) * blendColor.g;
+			}
+			
+			if (texColor.b > 0.5) {
+				resultColor.b = 1 - (1 - 2 * (texColor.b - 0.5)) * (1 - blendColor.b);
+			} else {
+				resultColor.b = (2 * texColor.b) * blendColor.b;
+			}
+			
+			return resultColor;
+		}
+		
+	
+		float3 DecodeNormal(const float4 texNormal)
+		{
+			float4 n = texNormal * 2 - 1;
+			return n.xyz;
+		}
+		
+		void MaterialShader(in Material_Input input, inout Material material)
+		{
+			
+			float4 specularGloss = tex2D(specularMap, input.texCoord);			
+			material.tsNormal 	= DecodeNormal( tex2D(normalMap, input.texCoord) );
+			material.specular	= specularGloss.rgb;
+			material.gloss		= specularGloss.a;
+			
+			float3 modelColorBase = float3( modelColorBaseR, modelColorBaseG, modelColorBaseB );
+			float3 modelColorAccent = float3( modelColorAccentR, modelColorAccentG, modelColorAccentB );
+			
+			
+			float3 greyAlbedoTex = dot( tex2D( albedoMap, input.texCoord ).rgb , float3(0.299, 0.587, 0.114) ); //NTSC grey
+			material.albedo = BlendColorOverlay( greyAlbedoTex.rgb, modelColorBase.rgb );
+			
+			float3 greyEmissive = dot( tex2D( emissiveMap, input.texCoord ).rgb , float3(0.299, 0.587, 0.114) ); //NTSC grey
+			material.emissive = BlendColorOverlay( greyEmissive.rgb, modelColorAccent.rgb );
+			
+			float opacityTex = tex2D( opacityMap, input.texCoord ).r;
+			material.opacity = opacityTex;
+			
+		}
+	]]>		
+	</code>
+
+</shader>
