@@ -8,6 +8,6 @@ specularMap = "models/marine/exosuit/exosuit_spec.dds"
 modelColorMap = "models/marine/exosuit/exosuit_colorMap.dds"
 
 numColumns = 1
-numRows = 2
+numRows = 1
 
 surface = "metal"
