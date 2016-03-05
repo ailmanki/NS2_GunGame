@@ -46,18 +46,14 @@ ns2_Player_OnInitialized = Class_ReplaceMethod("Player", "OnInitialized", gg_Pla
 if Client then
 
 	function Player:InitializeSkin()
-		local teamNum = self:GetTeamNumber()
+		local teamNumber = self:GetTeamNumber()
 		
 		self.skinColoringEnabled = true
-		self.skinBaseColor = self:GetBaseSkinColor(teamNum)
-		self.skinAccentColor = self:GetAccentSkinColor(teamNum)
-		self.skinTrimColor = self:GetTrimSkinColor(teamNum)
-		
-    	if teamNum ~= kTeamReadyRoom then
-			self.skinAtlasIndex = teamNum - 1
-		else
-			self.skinAtlasIndex = 0 // Clamp( self.previousTeamNumber - 1, 0, kTeam2Index )
-		end
+        self.skinAtlasIndex = ConditionalValue(teamNumber ~= kTeamReadyRoom, teamNumber - 1, 0)
+
+		self.skinBaseColor = self:GetBaseSkinColor(teamNumber)
+		self.skinAccentColor = self:GetAccentSkinColor(teamNumber)
+		self.skinTrimColor = self:GetTrimSkinColor(teamNumber)
 
 --[[
         local function DumpColor(color)
@@ -70,9 +66,7 @@ if Client then
 	end
 	
 	function Player:GetBaseSkinColor(teamNum)
-		if self.previousTeamNumber == kTeam1Index or self.previousTeamNumber == kTeam2Index and teamNum == kTeamReadyRoom then
-			return ConditionalValue( self.previousTeamNumber == kTeam1Index, kTeam1_BaseColor, kTeam2_BaseColor )
-		elseif teamNum == kTeam1Index or teamNum == kTeam2Index then
+		if teamNum == kTeam1Index or teamNum == kTeam2Index then
 			return ConditionalValue( teamNum == kTeam1Index, kTeam1_BaseColor, kTeam2_BaseColor )
 		else
 			return kNeutral_BaseColor
@@ -80,9 +74,7 @@ if Client then
 	end
 
 	function Player:GetAccentSkinColor(teamNum)
-		if self.previousTeamNumber == kTeam1Index or self.previousTeamNumber == kTeam2Index and teamNum == kTeamReadyRoom then
-			return ConditionalValue( self.previousTeamNumber == kTeam1Index, kTeam1_AccentColor, kTeam2_AccentColor )
-		elseif teamNum == kTeam1Index or teamNum == kTeam2Index then
+		if teamNum == kTeam1Index or teamNum == kTeam2Index then
 			return ConditionalValue( teamNum == kTeam1Index, kTeam1_AccentColor, kTeam2_AccentColor )
 		else
 			return kNeutral_AccentColor
@@ -90,9 +82,7 @@ if Client then
 	end
 	
 	function Player:GetTrimSkinColor(teamNum)
-		if self.previousTeamNumber == kTeam1Index or self.previousTeamNumber == kTeam2Index and teamNum == kTeamReadyRoom then
-			return ConditionalValue( self.previousTeamNumber == kTeam1Index, kTeam1_TrimColor, kTeam2_TrimColor )
-		elseif teamNum == kTeam1Index or teamNum == kTeam2Index then
+		if teamNum == kTeam1Index or teamNum == kTeam2Index then
 			return ConditionalValue( teamNum == kTeam1Index, kTeam1_TrimColor, kTeam2_TrimColor )
 		else
 			return kNeutral_TrimColor

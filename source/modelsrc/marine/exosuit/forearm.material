@@ -5,8 +5,9 @@ normalMap = "models/marine/exosuit/forearm_normal.dds"
 specularMap = "models/marine/exosuit/forearm_spec.dds"
 emissiveMap = "materials/dev/black.dds"
 
-modelColorMap = "models/marine/exosuit/forearm_colormap.dds"
-numColumns=1
-numRows=2
+modelColorMap = "models/marine/exosuit/forearm_colorMap.dds"
+
+numColumns = 1
+numRows = 2
 
 surface = "metal"

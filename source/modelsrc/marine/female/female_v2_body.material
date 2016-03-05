@@ -6,7 +6,7 @@ specularMap = "models/marine/female/female_v2_body_spec.dds"
 emissiveMap = "models/marine/male/illum.dds"
 
 modelColorMap = "models/marine/female/female_v2_body_colorMap.dds"
-numColumns=1
-numRows=2
+numColumns = 1
+numRows = 2
 
 surface = "organic"

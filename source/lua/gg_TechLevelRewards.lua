@@ -138,22 +138,17 @@ end
 // GiveGunFn (function) .. Callback to give guns and set class to player
 for k,v in pairs(GunGameRewards) do GunGameRewards[k]=nil end
 
-//kRewardTest = true
+local icons = kDeathMessageIcon
 
-if kRewardTest == nil then
-    GunGameRewards[1]  = { NextLvl = 3, GiveGunFn = GivePistol           }
-    GunGameRewards[2]  = { NextLvl = 3, GiveGunFn = GiveRifle            }
-    GunGameRewards[3]  = { NextLvl = 3, GiveGunFn = GiveShotgun          }
-    GunGameRewards[4]  = { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  }
-    GunGameRewards[5]  = { NextLvl = 3, GiveGunFn = GiveRifleJetpack     }
-    GunGameRewards[6]  = { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   }
-    GunGameRewards[7]  = { NextLvl = 3, GiveGunFn = GiveRailgunExo       }
-    GunGameRewards[8]  = { NextLvl = 3, GiveGunFn = GiveMinigunExo       }
-    GunGameRewards[9]  = { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   }
-    GunGameRewards[10] = { NextLvl = 1, GiveGunFn = GiveAxeJetpack       }
-else
-    GunGameRewards[1]  = { NextLvl = 3, GiveGunFn = GivePistol           }
-    GunGameRewards[2]  = { NextLvl = 3, GiveGunFn = GiveGrenadeJetpack   }
-    GunGameRewards[3]  = { NextLvl = 1, GiveGunFn = GiveAxeJetpack       }
-end
+GunGameRewards[1]  = { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol       , Type = nil           }
+GunGameRewards[2]  = { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle        , Type = nil           }
+GunGameRewards[3]  = { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun      , Type = nil           }
+GunGameRewards[4]  = { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL           , Type = nil           }
+GunGameRewards[5]  = { NextLvl = 3, GiveGunFn = GiveRifleJetpack     , Weapon = icons.Rifle        , Type = icons.Jetpack }
+GunGameRewards[6]  = { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   , Weapon = icons.Shotgun      , Type = icons.Jetpack }
+GunGameRewards[7]  = { NextLvl = 3, GiveGunFn = GiveRailgunExo       , Weapon = icons.Railgun      , Type = nil           }
+GunGameRewards[8]  = { NextLvl = 3, GiveGunFn = GiveMinigunExo       , Weapon = icons.Minigun      , Type = nil           }
+GunGameRewards[9]  = { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = icons.PulseGrenade , Type = icons.Jetpack }
+GunGameRewards[10] = { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe          , Type = icons.Jetpack }
+
 kMaxGunGameLevel = table.count(GunGameRewards)

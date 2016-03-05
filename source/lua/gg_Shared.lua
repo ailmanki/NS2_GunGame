@@ -51,9 +51,9 @@ kTeam2_BaseColor = Color(0.68, 0.24, 0.2, 1)
 kTeam2_AccentColor = Color(0.28, 0.04, 0.0, 1)
 kTeam2_TrimColor = Color(0.25, 0.03, 0.0, 1)
 
-kNeutral_BaseColor = Color( 0.65, 0.65, 0.65, 1 )
-kNeutral_AccentColor = Color( 1, 1, 1, 1 )
-kNeutral_TrimColor = Color( 0, 0, 0, 1 )
+kNeutral_BaseColor = Color( 0.5, 0.5, 0.5, 1)
+kNeutral_AccentColor = Color( 0.5, 0.5, 0.5, 0.5)
+kNeutral_TrimColor = Color( 0.1, 0.1, 0.1, 0.3)
 
 Script.Load("lua/ColoredSkinsMixin.lua")
 
