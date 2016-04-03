@@ -18,7 +18,7 @@ Spawn protection is basically impenetrable nano-shield. Players are re-spawned o
 
 **Spawn protection** duration can be modified by mapper per GunGame map. The time can be specified by seconds in ns2_gamerules entity  (default 3 seconds). Recommended spawn protection durations are:
 * Default **3 seconds** definitely suits medium sized maps like *gg_shelter* & *gg_pyramid*.
-* Small arena based maps like *gg_basic* and *gg_mini_mario* should have small spawn protection time around **1.5 second**. Because elsewhere a jetpack marine can get to the other side of the map and score 1 - 2 kills without taking any damage at all.
+* Small arena based maps like *gg_basic* and *gg_mini_mario_2* should have small spawn protection time around **1.5 second**. Because elsewhere a jetpack marine can get to the other side of the map and score 1 - 2 kills without taking any damage at all.
 * Large and complex maps like *gg_match*, where is hard to prevent spawn killing as spawn locations are open and big/complex enough to hide enemy should have spawn protection duration increased to around **5 to 8 second**.
 
 **Powerups** are experimental feature introduces into GunGame recently. They are not usual in GunGame modifications of other games (i.e. CounterStrike), but player can experience powerups in arena match games like: Doom, Quake or Unreal Tournament. 
@@ -43,12 +43,12 @@ After each kill of enemy **with primary weapon** associated with actual level, t
 
 The **kill counter** (number of acquired skulls) is not reset for these players, only levels are affected. Players can't drop below first level (pistol).
 
-#### Player can level up only once with axe or claw kill! 
+#### Player can level up only once in row with axe or claw kill! 
 *This change was made to prevent just axing for levels and ruin the game for other players.*
 
-Player which level-up with axe or claw kill will be not rewarded on second axe (or claw) kill in row with whole level but simple skull until level is changed. Level changed means **level-up** or (*this is important*) **level-down**!
- 
 Therefore players can't level up only by axe (or claw) any-more, but actually need to shot by primary weapon to progress faster then others.
+
+When player do level-up with axe or claw kill will be not rewarded on second axe (or claw) kill in row with whole level but simple skull until level is changed. Level changed means **level-up** or (*this is important*) **level-down**!
 
 ### GunGame Map List
 
@@ -56,7 +56,7 @@ Therefore players can't level up only by axe (or claw) any-more, but actually ne
 * **gg_shelter** .. two floors of corridors around open central area
 * **gg_pyramid** .. medium sized ancient feeling map with three floors
 * **gg_match** .. largest map with complex industrial like architecture
-* **gg_mini_mario_2** .. fun made map based on mini_mario counter strike map (mod-id: )
+* **gg_mini_mario_2** .. fun made map based on mini_mario counter strike map (mod-id: 2685364c)
 
 
 ### GunGame Mod ID - 2573eb73
