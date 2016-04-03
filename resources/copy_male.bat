@@ -7,7 +7,7 @@ ECHO --[ START ]--
 SET SOURCEDIR=C:\Users\ZycaR\Documents\ns2_gg\source\modelsrc\marine\male
 SET OUTPUTDIR=C:\Users\ZycaR\Documents\ns2_gg\output\models\marine\male
 
-ECHO -- Tundra marine
+ECHO -- Replace "male" files
 
 xcopy male\*.dds %SOURCEDIR%\ /R /Y
 xcopy male\*.material %SOURCEDIR%\ /R /Y
