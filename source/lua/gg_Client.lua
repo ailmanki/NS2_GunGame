@@ -4,6 +4,5 @@
 //
 
 decoda_name = "Client"
-Script.Load("lua/gg_Shared.lua")
 
 Shared.Message('GunGame mode...')

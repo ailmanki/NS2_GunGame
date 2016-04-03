@@ -1,8 +1,4 @@
 <game>
     <name>ns2_gg</name>
     <description>NS2 GunGame</description>
-    <client>lua/gg_Client.lua</client>
-    <predict>lua/gg_Predict.lua</predict>
-    <server>lua/gg_Server.lua</server>
-    <loading>lua/gg_Loading.lua</loading>
 </game>

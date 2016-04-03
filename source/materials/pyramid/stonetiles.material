@@ -1,0 +1,5 @@
+shader = "shaders/Level.surface_shader"
+albedoMap = "materials/pyramid/stonetiles.dds"
+normalMap = "materials/pyramid/stonetiles_normal.dds"
+specularMap = "materials/pyramid/stonetiles_spec.dds"
+surface = "rock"

@@ -242,7 +242,7 @@
 			float4 modelColorMapTex = tex2D( modelColorMap, colorMapUV ).rgba;
 			
 			// un-premultiply the blendColor alpha out from blendColor
-			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, 0, 1 );	//OpenGL support, saturate() not in GLSL
+			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, (float) 0, (float) 1 );	//OpenGL support, saturate() not in GLSL
 			
 			float3 modBaseAlbedoTex = albedoTex;
 			float3 grayAlbedoMap = dot( albedoTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey
@@ -302,7 +302,7 @@
 			}
 			
 			float3 greyEmissive = dot( emissiveTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey
-			//float3 tmpEmissiveModelColor = clamp( modelColorAccent.rgb / modelColorMapTex.a, 0.0, 1.0 );	//adjust per colorMap alpha
+			//float3 tmpEmissiveModelColor = clamp( modelColorAccent.rgb / modelColorMapTex.a, (float) 0.0, (float) 1.0 );	//adjust per colorMap alpha
 			
 			if( modelColorMapTex.a > 0 && colorizeModel == 1 ) {
 				material.emissive = BlendColorOverlay( greyEmissive.rgb, modelColorAccent.rgb ); //blend color into emissive grey;

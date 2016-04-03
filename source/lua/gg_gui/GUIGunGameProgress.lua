@@ -11,6 +11,7 @@ class 'GUIGunGameProgress' (GUIAnimatedScript)
 
 kInactiveAlpha = 0.25
 kActiveAlpha = 0.75
+kGameNotStartedColor = Color(1.0, 0.0, 0.0, 0.5)
 
 function GUIGunGameProgress:Initialize(client)
     GUIAnimatedScript.Initialize(self)
@@ -20,6 +21,8 @@ function GUIGunGameProgress:Initialize(client)
     
     self.lastGunGameExp = nil
     self.expProgress = {}
+    
+    self.lastGameStarted = false
 
     self:CreateLvlProgress(kMaxGunGameLevel)
     self:CreateExpProgress(1)
@@ -36,9 +39,10 @@ end
 local function GetGunGameData()
     local player = Client.GetLocalPlayer()
     if player then
-        return player.GunGameLevel, player.GunGameExp
+        local ingame = player:GetGameStarted()
+        return player.GunGameLevel, player.GunGameExp, ingame
     else
-        return 1, 0
+        return 1, 0, false
     end
 end
 
@@ -63,32 +67,38 @@ end
 
 function GUIGunGameProgress:Update(deltaTime)
 
-    local lvl, exp = GetGunGameData()
+    local lvl, exp, ingame = GetGunGameData()
     
-    if lvl and lvl ~= self.lastGunGameLevel then
-        self:SetLvlProgress(lvl)
+    if (lvl and lvl ~= self.lastGunGameLevel) or
+       (self.lastGameStarted ~= ingame)
+    then
+        self:SetLvlProgress(lvl, ingame)
         
         local reward = GunGameRewards[self.lastGunGameLevel]
         if reward ~= nil and reward.NextLvl ~= table.count(self.expProgress) then
             self:DestroyExpProgress()
             self:CreateExpProgress(reward.NextLvl)
         end
-        
-        Print("@@@ GunGameLevel=[ "..lvl.." / "..kMaxGunGameLevel.."]")
+
     end    
     
-    if exp ~= nil and exp ~= self.lastGunGameExp then
-
-        self:SetExpProgress(exp)
+    if (exp ~= nil and exp ~= self.lastGunGameExp) or
+       (self.lastGameStarted ~= ingame)
+    then
+        self:SetExpProgress(exp, ingame)
     end
+    
+    self.lastGameStarted = ingame
 end
 
-function GUIGunGameProgress:SetExpProgress(exp)
+function GUIGunGameProgress:SetExpProgress(exp, ingame)
 
     self.lastGunGameExp = exp
     for index, icon in ipairs(self.expProgress) do
         local opacity = ConditionalValue(exp >= index, kActiveAlpha, kInactiveAlpha)
-        icon:SetColor(Color(1, 1, 1, opacity))
+        // different colors of skulls to indicate that game is running or not
+        local color = ConditionalValue(ingame, Color(1, 1, 1, opacity), kGameNotStartedColor)
+        icon:SetColor(color)
     end
 
 end
@@ -118,7 +128,7 @@ function GUIGunGameProgress:CreateExpProgress(maxCount)
 
 end
 
-function GUIGunGameProgress:SetLvlProgress(lvl)
+function GUIGunGameProgress:SetLvlProgress(lvl, ingame)
 
     self.lastGunGameLevel = lvl
     
@@ -131,12 +141,16 @@ function GUIGunGameProgress:SetLvlProgress(lvl)
         elseif lvl > index then
             color = Color(1, 1, 1, kActiveAlpha)
         end
+        
+        // different (red) color to indicate that game is not running
+        if not ingame and lvl ~= index then
+            color = kGameNotStartedColor
+        end
 
         if icon.weapon ~= nil then icon.weapon:SetColor(color) end
         if icon.type ~= nil then icon.type:SetColor(color) end
-
     end
-    
+  
 end
 
 function GUIGunGameProgress:DestroyLvlProgress()

@@ -53,8 +53,13 @@ if Server then
         self.originOnDeath = self:GetOrigin()
         
         if isKilledByEnemy then
-            attacker:AdjustExp(ConditionalValue(isHumiliation, 3, 1))
+            attacker:AdjustExp(ConditionalValue(isHumiliation and not attacker:LastHumiliationTime(), 3, 1))
             attacker:AdjustGunGameData()
+
+            // set last humiliation time after adjusting game data (or it will removed it in case of level change)
+            if isHumiliation then
+                attacker:LastHumiliationTime(Shared.GetTime())
+            end
         end
         
         if isSuicide or isHumiliation then
@@ -76,8 +81,12 @@ if Server then
         self.lastExoLayout = { self:ExoLayout() }
         
         if isKilledByEnemy then
-            attacker:AdjustExp(ConditionalValue(isHumiliation, 3, 1))
+            attacker:AdjustExp(ConditionalValue(isHumiliation and not attacker:LastHumiliationTime(), 3, 1))
             attacker:AdjustGunGameData()
+
+            if isHumiliation then
+                attacker:LastHumiliationTime(Shared.GetTime())
+            end
         end
         
         if isSuicide or isHumiliation then
@@ -94,10 +103,12 @@ if Server then
         
         self.GunGameLevel = player.GunGameLevel
         self.GunGameExp = player.GunGameExp
+        self.GunGameSpawnProtection = player.GunGameSpawnProtection
 
-        self.ggData.classAfterRespawn = player.ggData.classAfterRespawn
-        self.ggData.exoLayout = player.ggData.exoLayout
-        self.ggData.lastTeamNumber = player.ggData.lastTeamNumber
+        self:ClassAfterRespawn(player:ClassAfterRespawn())
+        self:ExoLayout(player:ExoLayout())
+        self:LastTeamNumber(player:LastTeamNumber())
+        self:LastHumiliationTime(player:LastHumiliationTime())
 
         self:AdjustGunGameData(true)
 	end

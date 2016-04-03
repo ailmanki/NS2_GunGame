@@ -8,19 +8,21 @@
 ------------
 if (Server) then
 
+    local ns2_OnMapPostLoad = NS2Gamerules.OnMapPostLoad
+    function NS2Gamerules:OnMapPostLoad()
+        ns2_OnMapPostLoad(self)
+        kNanoShieldDuration = ConditionalValue(self.SpawnProtectionTime ~= nil, 
+            self.SpawnProtectionTime, kSpawnProtectionTime)
+    end
+
     local ns2_BuildTeam = NS2Gamerules.BuildTeam
-    local ns2_EndGame = NS2Gamerules.EndGame
-    local ns2_CheckGameStart = NS2Gamerules.CheckGameStart
-    local ns2_CheckGameEnd = NS2Gamerules.CheckGameEnd
-    local ns2_GetCanSpawnImmediately = NS2Gamerules.GetCanSpawnImmediately
-    local ns2_UpdateTechPoints = NS2Gamerules.UpdateTechPoints
-    
     function NS2Gamerules:BuildTeam(teamType)
         return GunGameTeam()
     end
 
+    local ns2_EndGame = NS2Gamerules.EndGame
     function NS2Gamerules:EndGame(player)
-        if self:GetGameState() == kGameState.Started then
+        if GetGamerules():GetGameStarted() then
             
             Shared.Message("Player " .. player:GetName() .. " win GunGame round")
             PostGameViz("GunGame Ends Winner:" .. player:GetName())
@@ -46,7 +48,9 @@ if (Server) then
         end
     end
     
+    local ns2_CheckGameStart = NS2Gamerules.CheckGameStart
     function NS2Gamerules:CheckGameStart()
+   
         if self:GetGameState() == kGameState.NotStarted or self:GetGameState() == kGameState.PreGame then
             -- Start pre-game when both teams have players or when once side does if cheats are enabled
             local team1Players = self.team1:GetNumPlayers()
@@ -62,13 +66,14 @@ if (Server) then
         end   
     end
 
+    local ns2_CheckGameEnd = NS2Gamerules.CheckGameEnd
     function NS2Gamerules:CheckGameEnd()
         PROFILE("GunGameGamerules:CheckGameEnd")
         if self:GetGameStarted() and self.timeGameEnded == nil and not Shared.GetCheatsEnabled() then
 
             local winner1 = self.team1:GetWinner()
             local winner2 = self.team2:GetWinner()
-            local winner = ConditionalValue((winner1 ~= nil), winner1, winner2 )
+            local winner = ConditionalValue(winner1 ~= nil, winner1, winner2 )
             
             if winner ~= nil then
                 self:EndGame(winner)
@@ -76,25 +81,27 @@ if (Server) then
         end
     end
     
+    local ns2_GetCanSpawnImmediately = NS2Gamerules.GetCanSpawnImmediately
     function NS2Gamerules:GetCanSpawnImmediately()
         return true
     end
     
     // no tech points to be updated
+    local ns2_UpdateTechPoints = NS2Gamerules.UpdateTechPoints
     function NS2Gamerules:UpdateTechPoints()
+    end
+
+    // customized constants (varions tweaks)
+    local ns2_GetPregameLength = NS2Gamerules.GetPregameLength
+    function NS2Gamerules:GetPregameLength()
+        return ConditionalValue(Shared.GetCheatsEnabled(), 0, kGunGamePregameLength)
     end
 
     // do not check for commanders    
     local function ggCheckForNoCommander(self, onTeam, commanderType)
     end
     ReplaceLocals(NS2Gamerules.OnUpdate, { CheckForNoCommander = ggCheckForNoCommander })
-
-    // customized constants to speed up game start and end (varions tweaks)
-    ReplaceLocals(NS2Gamerules.UpdatePregame, { preGameTime = kGunGamePregameLength })
-    ReplaceLocals(NS2Gamerules.UpdateToReadyRoom, { kTimeToReadyRoom = kGunGameTimeToReadyRoom })
-
 end
 ----------------    
 -- End Server --
 ----------------
-

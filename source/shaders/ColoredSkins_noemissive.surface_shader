@@ -148,7 +148,7 @@
 			float4 tmpColor = float4(0.0, 0.0, 0.0, 0.0);
 			
 			// un-premultiply the blendColor alpha out from blendColor
-			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, 0.0, 1.0 );	//OpenGL support, saturate() not in GLSL
+			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, (float) 0.0, (float) 1.0 );	//OpenGL support, saturate() not in GLSL
 			
 			float3 modBaseAlbedoTex = albedoTex;
 			float3 grayAlbedoMap = dot( albedoTex.rgb, float3(0.299, 0.587, 0.114) ); //NTSC grey

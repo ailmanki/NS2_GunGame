@@ -4,7 +4,6 @@
 //
 
 decoda_name = "Server"
-Script.Load("lua/gg_Shared.lua")
 
 // choose spawn locations
 Server.spawnLocationsList = table.array(32)

@@ -152,7 +152,7 @@
 			float4 modelColorMapTex = tex2D( modelColorMap, colorMapUV ).rgba;
 			
 			// un-premultiply the blendColor alpha out from blendColor
-			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, 0, 1 );	//OpenGL support, saturate() not in GLSL
+			float3 tempModelColorBase = clamp( modelColorBase.rgb / modelColorMapTex.a, (float) 0, (float) 1 );	//OpenGL support, saturate() not in GLSL
 			
 			
 			float3 modBaseAlbedoTex = albedoTex;

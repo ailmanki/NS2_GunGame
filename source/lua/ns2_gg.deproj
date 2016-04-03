@@ -13,10 +13,16 @@
     <filename>gg_gui\GUIGunGameProgress.lua</filename>
   </file>
   <file>
+    <filename>gg_gui\GUIPickupsHooks.lua</filename>
+  </file>
+  <file>
     <filename>Hud\GUIPlayerResource.lua</filename>
   </file>
   <file>
     <filename>gg_Client.lua</filename>
+  </file>
+  <file>
+    <filename>gg_FileHook.lua</filename>
   </file>
   <file>
     <filename>gg_Gamerules.lua</filename>
@@ -25,10 +31,7 @@
     <filename>gg_GunGameTeam.lua</filename>
   </file>
   <file>
-    <filename>gg_Loading.lua</filename>
-  </file>
-  <file>
-    <filename>gg_MarineHooks.lua</filename>
+    <filename>gg_NanoShieldMixin.lua</filename>
   </file>
   <file>
     <filename>gg_NetworkMessages.lua</filename>
@@ -40,7 +43,7 @@
     <filename>gg_PlayerNetVars.lua</filename>
   </file>
   <file>
-    <filename>gg_Predict.lua</filename>
+    <filename>gg_Powerups.lua</filename>
   </file>
   <file>
     <filename>gg_Server.lua</filename>

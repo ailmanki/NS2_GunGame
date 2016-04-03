@@ -3,9 +3,6 @@
 //	ZycaR (c) 2016
 //
 
-Script.Load("lua/ModLoader.lua")
-ModLoader.SetupFileHook( "lua/Player.lua", "lua/gg_PlayerNetVars.lua" , "post" )
-
 if Server then
     Script.Load("lua/Server.lua")
 elseif Client then
@@ -17,17 +14,22 @@ end
 Script.Load("lua/gg_GunGameTeam.lua")
 Script.Load("lua/gg_NetworkMessages.lua")
 Script.Load("lua/gg_SpawnLocation.lua")
+Script.Load("lua/gg_Powerups.lua")
 Script.Load("lua/gg_Gamerules.lua")
 
 // GunGame specific data
 kMaxGunGameLevel = 1        // updated by size of tech rewards table
 
-kGunGamePregameLength = 1
-kGunGameTimeToReadyRoom = 3
+kGunGamePregameLength = 30
+kRejoinGunGamePenalty = -1
 
+// Spawn protection for classes (nano shield)
+kSpawnProtectionTime = 3    // 3 second
+kNanoShieldDuration = kSpawnProtectionTime
+kNanoShieldDamageReductionDamage = 0
 
 // GunGame damage balances
-kAxeDamage = 100            // 400%
+kAxeDamage = 75             // 300%
 kClawDamage = 100           // 200%
 kPistolDamage = 25          // 100%
 kPulseGrenadeDamage = 110   // 100%
@@ -64,3 +66,11 @@ Script.Load("lua/gg_TechLevelHooks.lua")
 Script.Load("lua/gg_TechLevelSystem.lua")
 
 Script.Load("lua/gg_PlayerHooks.lua")
+
+// this overrides global methods to have only marine units
+function GetIsMarineUnit(entity)
+    return entity and HasMixin(entity, "Team")
+end
+function GetIsAlienUnit(entity)
+    return false
+end

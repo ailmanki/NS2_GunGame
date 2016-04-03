@@ -16,26 +16,30 @@ if Server then
         // kill based (+1 .. kill, -3 .. death by axe or suicide, etc.)
         self.GunGameExp = 0
 
+        // nanoshield after respawn and every time exosuit is spawned
+        self.GunGameSpawnProtection = false
+
         // actual player class for respawn
         self.ggData = {}
         self.ggData.classAfterRespawn = nil
         self.ggData.exoLayout = nil
        
         // save the last team
-        self.ggData.lastTeamNumber = self:GetTeamNumber() 
+        self.ggData.lastTeamNumber = self:GetTeamNumber()
+
+        // time, when player kill by axe / claw
+        self.ggData.lastHumiliationTime = nil
     end
     
     local function ChangeGunGameLevel(player, value)
         player.GunGameLevel = Clamp(player.GunGameLevel + value, 1, kMaxGunGameLevel + 1)
 
-        -- Only give weapons when playing according actual gun reward
-        local enableWeapons = 
-            player:GetTeamNumber() ~= kNeutralTeamType and
-            not player.preventWeapons
-
+        -- Give weapons only when playing and according actual gun reward
         local reward = GunGameRewards[player.GunGameLevel]
-        if reward ~= nil and enableWeapons then
-
+        if reward ~= nil and 
+           player:GetIsOnPlayingTeam() and
+           not player.preventWeapons
+        then
             player.ggData.classAfterRespawn = nil
             player.ggData.exoLayout = nil
             player:ResetHeathAndArmor()
@@ -52,6 +56,7 @@ if Server then
 
         // this might (and should) change reward
         ChangeGunGameLevel(player, value)
+        player.ggData.lastHumiliationTime = nil
 
         // remove acquired exp based on last next level exp value
         player.GunGameExp = player.GunGameExp - lastReward.NextLvl
@@ -65,6 +70,7 @@ if Server then
         local lastLevel = player.GunGameLevel
         
         ChangeGunGameLevel(player, -value)
+        player.ggData.lastHumiliationTime = nil
         
         // re-calculate remaining exp when level down
         if player.GunGameLevel < lastLevel then
@@ -100,7 +106,9 @@ if Server then
     end
     
     function Player:AdjustExp(value)
-        self.GunGameExp = self.GunGameExp + value
+        if GetGamerules():GetGameStarted() then
+            self.GunGameExp = self.GunGameExp + value
+        end
     end
     
     // Winning condition is passing max available GunGame level (one level above axe)
@@ -122,5 +130,20 @@ if Server then
         end
         return self.ggData.exoLayout
     end
-
+    
+    function Player:LastTeamNumber(teamNumber)
+        if not self.ggData then return kNeutralTeamType end
+        if teamNumber ~= nil then
+            self.ggData.lastTeamNumber = teamNumber
+        end    
+        return self.ggData.lastTeamNumber
+    end
+    
+    function Player:LastHumiliationTime(time)
+        if not self.ggData then return nil end
+        if time ~= nil then
+            self.ggData.lastHumiliationTime = time
+        end    
+        return self.ggData.lastHumiliationTime
+    end    
 end

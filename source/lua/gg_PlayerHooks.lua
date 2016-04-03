@@ -15,10 +15,12 @@ HeathAndArmorLUT = {
 function Player:ResetHeathAndArmor()
     local mapName = self:GetMapName()
     local data = HeathAndArmorLUT[mapName]
-
-    self:SetHealth(data.health)
-    self:SetMaxArmor(data.armor)
-    self:SetArmor(data.armor)
+    
+    if data then
+        self:SetHealth(data.health)
+        self:SetMaxArmor(data.armor)
+        self:SetArmor(data.armor)
+    end
 end
 
 local ns2_Player_OnCreate, gg_Player_OnCreate
@@ -43,6 +45,31 @@ gg_Player_OnInitialized = function(self)
 end
 ns2_Player_OnInitialized = Class_ReplaceMethod("Player", "OnInitialized", gg_Player_OnInitialized)
 
+local ns2_Player_OnJoinTeam, gg_Player_OnJoinTeam
+gg_Player_OnJoinTeam = function(self)
+
+	ns2_Player_OnJoinTeam(self)
+	
+	local teamNumber = self:GetTeamNumber()
+	local lastTeamNumber = self:LastTeamNumber()
+	
+	if self:GetIsOnPlayingTeam() and self:GetGameStarted() and
+	   (lastTeamNumber == kTeam1Index or lastTeamNumber == kTeam2Index)
+    then
+	    self:LastTeamNumber(teamNumber)
+	    self:AdjustExp(kRejoinGunGamePenalty)
+        self.GunGameSpawnProtection = true
+        self:AdjustGunGameData(true)
+
+        local message = "You lost kill(s) for rejoining the game!"
+        local chat = BuildChatMessage(true, "[GunGame]", -1, kTeamReadyRoom, kNeutralTeamType, message)
+	    Server.SendNetworkMessage(self, "Chat", chat, true)
+    end
+    
+end
+ns2_Player_OnJoinTeam = Class_ReplaceMethod("Player", "OnJoinTeam", gg_Player_OnJoinTeam)
+
+
 if Client then
 
 	function Player:InitializeSkin()
@@ -65,25 +92,25 @@ if Client then
 --]]
 	end
 	
-	function Player:GetBaseSkinColor(teamNum)
-		if teamNum == kTeam1Index or teamNum == kTeam2Index then
-			return ConditionalValue( teamNum == kTeam1Index, kTeam1_BaseColor, kTeam2_BaseColor )
+	function Player:GetBaseSkinColor(teamNumber)
+		if teamNumber == kTeam1Index or teamNumber == kTeam2Index then
+			return ConditionalValue( teamNumber == kTeam1Index, kTeam1_BaseColor, kTeam2_BaseColor )
 		else
 			return kNeutral_BaseColor
 		end		
 	end
 
-	function Player:GetAccentSkinColor(teamNum)
-		if teamNum == kTeam1Index or teamNum == kTeam2Index then
-			return ConditionalValue( teamNum == kTeam1Index, kTeam1_AccentColor, kTeam2_AccentColor )
+	function Player:GetAccentSkinColor(teamNumber)
+		if teamNumber == kTeam1Index or teamNumber == kTeam2Index then
+			return ConditionalValue( teamNumber == kTeam1Index, kTeam1_AccentColor, kTeam2_AccentColor )
 		else
 			return kNeutral_AccentColor
 		end
 	end
 	
-	function Player:GetTrimSkinColor(teamNum)
-		if teamNum == kTeam1Index or teamNum == kTeam2Index then
-			return ConditionalValue( teamNum == kTeam1Index, kTeam1_TrimColor, kTeam2_TrimColor )
+	function Player:GetTrimSkinColor(teamNumber)
+		if teamNumber == kTeam1Index or teamNumber == kTeam2Index then
+			return ConditionalValue( teamNumber == kTeam1Index, kTeam1_TrimColor, kTeam2_TrimColor )
 		else
 			return kNeutral_TrimColor
 		end
@@ -100,6 +127,13 @@ end
 Class_ReplaceMethod("Marine", "Drop", 
     function(self, weapon, ignoreDropTimeLimit, ignoreReplacementWeapon)
 	    return true // do nothing
+    end
+)
+
+// Don't eject from exo .. same story as dropping weapons
+Class_ReplaceMethod("Exo", "GetCanEject", 
+    function(self)
+        return false
     end
 )
 

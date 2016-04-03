@@ -10,11 +10,32 @@ class 'GUIPlayerResource'
 
 function CreatePlayerResourceDisplay(scriptHandle, hudLayer, frame, style)
     local result = GUIPlayerResource()
-
+	
     result.GunGameProgress = GUIGunGameProgress()
     result.GunGameProgress:Initialize()
 
+	// for NS2+ (and other mods) to supply expected child elements
+	result.script = scriptHandle
+    result.hudLayer = hudLayer
+    result.frame = frame
+	result:Initialize(style)
+
     return result
+end
+
+// for NS2+ (and other mods) to supply expected child elements
+function GUIPlayerResource:Initialize(style)
+    self.style = style
+    self.scale = 1
+    self.lastPersonalResources = 0
+	
+    self.background = self.script:CreateAnimatedGraphicItem()
+    self.rtCount = GetGUIManager():CreateGraphicItem()
+    self.personalIcon = self.script:CreateAnimatedGraphicItem()
+    self.personalText = self.script:CreateAnimatedTextItem()
+    self.pResDescription = self.script:CreateAnimatedTextItem()
+    self.ResGainedText = self.script:CreateAnimatedTextItem()
+    self.teamText = self.script:CreateAnimatedTextItem()
 end
 
 function GUIPlayerResource:Reset(scale)

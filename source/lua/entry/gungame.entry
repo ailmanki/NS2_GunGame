@@ -1,0 +1,7 @@
+modEntry = {
+	Client = "lua/gg_Client.lua",
+	Server = "lua/gg_Server.lua",
+	Shared = "lua/gg_Shared.lua",
+	FileHooks = "lua/gg_Filehook.lua",
+	Priority = 24
+}

@@ -25,6 +25,16 @@
         </parameter>
     </class>
 
+	<class name="powerups">
+        <model>
+            <file>models/misc/attentionmark/attentionmark.model</file>
+        </model>
+		<sphere><radius>dropRadius</radius></sphere>
+        <parameter name="dropRadius" type="distance" default="3" label="Drop Radius" 
+				   help="The power-up will not be dropped when another power-up of same type is in radius (prevent stacking)."/>
+        <parameter name="dropRate" type="real" default="24.0" label="Drop Rate (sec)"
+				   help="The drop rate for power-up in seconds."/>
+    </class>
 	<!-- end GunGame -->
 	
 	
@@ -457,7 +467,7 @@
         <parent>gamerules</parent>
 		
 		<parameter name="roundStartMusic" type="file" filter="sound" label="Round start music" help="Defines the music played when a round starts." default="sound/NS2.fev/round_start" />
-
+        <parameter name="SpawnProtectionTime" type="real" default="3.0" label="Spawn Protection Time" help="GunGame spawn protection duration / nano-shield in seconds."/>
         
         <model>
             <file>models/system/editor/gamerules.model</file>

@@ -1,0 +1,5 @@
+shader = "shaders/Level.surface_shader"
+albedoMap = "materials/pyramid/sandstone.dds"
+normalMap = "materials/pyramid/sandstone_pattern_normal.dds"
+
+surface = "rock"
