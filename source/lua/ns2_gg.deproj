@@ -13,6 +13,9 @@
     <filename>gg_gui\GUIGunGameProgress.lua</filename>
   </file>
   <file>
+    <filename>gg_gui\GUIMarineHUDHooks.lua</filename>
+  </file>
+  <file>
     <filename>gg_gui\GUIPickupsHooks.lua</filename>
   </file>
   <file>
@@ -41,6 +44,9 @@
   </file>
   <file>
     <filename>gg_PlayerNetVars.lua</filename>
+  </file>
+  <file>
+    <filename>gg_Player_ClientHooks.lua</filename>
   </file>
   <file>
     <filename>gg_Powerups.lua</filename>

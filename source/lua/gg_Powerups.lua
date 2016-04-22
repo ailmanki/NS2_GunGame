@@ -8,7 +8,10 @@ class 'Powerups' (Entity)
 Powerups.kMapName = "powerups"
 
 local networkVars = {}
-local kPowerupDrop = { ClassName = "CatPack", MapName = CatPack.kMapName, Sound = CatPack.kPickupSound }
+kPowerupDrops = {}
+kPowerupDrops[0] = { ClassName = "CatPack", MapName = CatPack.kMapName, Sound = CatPack.kPickupSound }
+kPowerupDrops[1] = { ClassName = "MedPack", MapName = MedPack.kMapName, Sound = MedPack.kHealthSound }
+kPowerupDrops[2] = { ClassName = "AmmoPack", MapName = AmmoPack.kMapName, Sound = AmmoPack.kPickupSound }
 
 local function TriggerPowerup(self, timePassed)
 
@@ -34,8 +37,9 @@ end
 
 function Powerups:OnInitialized()
     Entity.OnInitialized(self)
-    
-    self.drop = kPowerupDrop
+
+    self.dropType = Clamp(self.dropType, 0, 2)
+    self.drop = kPowerupDrops[self.dropType]
     self.dropRadius = Clamp(self.dropRadius, 1.0, 100.0)
     self.dropRate = Clamp(self.dropRate, 12, 360)
 

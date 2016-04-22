@@ -34,6 +34,12 @@
 				   help="The power-up will not be dropped when another power-up of same type is in radius (prevent stacking)."/>
         <parameter name="dropRate" type="real" default="24.0" label="Drop Rate (sec)"
 				   help="The drop rate for power-up in seconds."/>
+		<parameter name="dropType" type="choice" default="0" label="Drop Type"
+				   help="Determines what type of power-up will be dropped.">
+            <choice label="Catalyst" value="0"/>
+            <choice label="MedPack" value="1"/>
+            <choice label="AmmoPack" value="2"/>
+        </parameter>				   
     </class>
 	<!-- end GunGame -->
 	
