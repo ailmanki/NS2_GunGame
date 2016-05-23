@@ -12,7 +12,9 @@ if(not HotReload) then
 end
 
 local function InitWeaponsWithAxe(player)
-    if player:GetMapName() ~= Exo.kMapName then
+    if player:GetIsAlive() and
+       player:GetMapName() ~= Exo.kMapName
+    then
         player:DestroyWeapons()
         player:GiveItem(Axe.kMapName)
         player:SetQuickSwitchTarget(Axe.kMapName)
@@ -50,7 +52,6 @@ end
 //
 local function GiveShotgun(player)
     if InitWeaponsWithAxe(player) then
-        Print("Give SG - NoExo")
         local kWeaponMap = Shotgun.kMapName
         player:GiveItem(kWeaponMap)
         player:SetActiveWeapon(kWeaponMap)
