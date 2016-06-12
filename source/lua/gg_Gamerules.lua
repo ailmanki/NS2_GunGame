@@ -51,13 +51,14 @@ if (Server) then
     local ns2_CheckGameStart = NS2Gamerules.CheckGameStart
     function NS2Gamerules:CheckGameStart()
    
-        if self:GetGameState() == kGameState.NotStarted or self:GetGameState() == kGameState.PreGame then
+        -- it's ordered int enum (less or equal than pregame means game not started yet)
+        if self:GetGameState() <= kGameState.PreGame then
             -- Start pre-game when both teams have players or when once side does if cheats are enabled
             local team1Players = self.team1:GetNumPlayers()
             local team2Players = self.team2:GetNumPlayers()
             
             if (team1Players > 0 and team2Players > 0) or (Shared.GetCheatsEnabled() and (team1Players > 0 or team2Players > 0)) then
-                if self:GetGameState() == kGameState.NotStarted then
+                if self:GetGameState() < kGameState.PreGame then
                     self:SetGameState(kGameState.PreGame)
                 end
             elseif self:GetGameState() == kGameState.PreGame then
