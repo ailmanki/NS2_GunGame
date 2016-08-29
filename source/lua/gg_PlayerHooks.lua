@@ -119,7 +119,7 @@ end
 
 function Marine:GetActiveWeaponMapName()
     local activeWeapon = self:GetActiveWeapon()
-    return ConditionalValue(activeWeapon, activeWeapon:GetMapName(), nil)
+    return activeWeapon ~= nil and activeWeapon.GetMapName and activeWeapon:GetMapName() or nil
 end
 
 // Don't drop weapons .. it's GunGame not charity.

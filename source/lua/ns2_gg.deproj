@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
   <file>
-    <filename>bots\BrainSenses.lua</filename>
-  </file>
-  <file>
     <filename>ColoredSkinsMixin.lua</filename>
   </file>
   <file>
@@ -40,6 +37,9 @@
     <filename>gg_NetworkMessages.lua</filename>
   </file>
   <file>
+    <filename>gg_ns2fix\gg_PlayerBrain.lua</filename>
+  </file>
+  <file>
     <filename>gg_PlayerHooks.lua</filename>
   </file>
   <file>
@@ -50,6 +50,9 @@
   </file>
   <file>
     <filename>gg_Powerups.lua</filename>
+  </file>
+  <file>
+    <filename>gg_ns2fix\gg_Railgun.lua</filename>
   </file>
   <file>
     <filename>gg_Server.lua</filename>
@@ -68,5 +71,14 @@
   </file>
   <file>
     <filename>gg_TechLevelSystem.lua</filename>
+  </file>
+  <file>
+    <filename>bots\gg_bot_GunGameBrain.lua</filename>
+  </file>
+  <file>
+    <filename>bots\gg_bot_GunGameBrain_Data.lua</filename>
+  </file>
+  <file>
+    <filename>bots\gg_bot_PlayerBot.lua</filename>
   </file>
 </project>
