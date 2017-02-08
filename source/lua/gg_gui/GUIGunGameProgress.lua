@@ -167,8 +167,8 @@ function GUIGunGameProgress:CreateLvlProgress(maxCount)
 
     local w, h = kInventoryIconTextureWidth, kInventoryIconTextureHeight
 
-    local kSpacing = 640 / maxCount
-    local offsetX = 320 + w * 0.5
+    local kSpacing = 64
+    local offsetX = 32 * maxCount + w * 0.5
     local offsetY = 48 + h * 0.5
 
     for index = 1, maxCount do
