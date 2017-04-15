@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--[[
+ 	GunGame NS2 Mod
+	ZycaR (c) 2016
+]]
 
 
 // don't delete old network vars, simply replace them if their type has changed or add them if new

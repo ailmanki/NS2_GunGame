@@ -151,28 +151,35 @@ end
 for k,v in pairs(GunGameRewards) do GunGameRewards[k]=nil end
 
 local icons = kDeathMessageIcon
+local kPulseGrenade = icons.PulseGrenade
 
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol       , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle        , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun      , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun, Type = nil           }
 //GunGameRewards[#GunGameRewards + 1]  = 
 //    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL           , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL     , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRifleJetpack     , Weapon = icons.Rifle        , Type = icons.Jetpack }
+    { NextLvl = 3, GiveGunFn = GiveRifleJetpack     , Weapon = icons.Rifle  , Type = icons.Jetpack }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   , Weapon = icons.Shotgun      , Type = icons.Jetpack }
+    { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   , Weapon = icons.Shotgun, Type = icons.Jetpack }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRailgunExo       , Weapon = icons.Railgun      , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GiveRailgunExo       , Weapon = icons.Railgun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveMinigunExo       , Weapon = icons.Minigun      , Type = nil           }
+    { NextLvl = 3, GiveGunFn = GiveMinigunExo       , Weapon = icons.Minigun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1] = 
-    { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = icons.PulseGrenade , Type = icons.Jetpack }
+    { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = kPulseGrenade, Type = icons.Jetpack }
 GunGameRewards[#GunGameRewards + 1] = 
-    { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe          , Type = icons.Jetpack }
+    { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe    , Type = icons.Jetpack }
 
 kMaxGunGameLevel = table.count(GunGameRewards)
+
+function GetCanGiveGrenade(player)
+    local reward = GunGameRewards[player.GunGameLevel]
+    return reward ~= nil and reward.Weapon == kPulseGrenade and
+           table.maxn(GetChildEntities(player, "PulseGrenadeThrower")) < 1
+end

@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--[[
+ 	GunGame NS2 Mod
+	ZycaR (c) 2016
+]]
 
 // ----------------------------------------------
 // --- Overrides related to tech level system ---
@@ -12,7 +12,34 @@ Script.Load("lua/gg_TechLevelRewards.lua")
 // --- Overrides related to tech level system ---
 // ----------------------------------------------
 
-if Server then 
+if Server then
+
+    local function CanResupplyGrenade(player)
+        return player:GetIsAlive() and 
+               player:GetIsOnPlayingTeam() and
+               player:GetGameStarted() and
+               not player.preventWeapons and               
+               GetCanGiveGrenade(player)
+    end
+
+    local function ResupplyGrenade(self, timePassed)
+        if CanResupplyGrenade(self) then
+            self:GiveItem(PulseGrenadeThrower.kMapName)
+        end
+        self.pendingGrenade = false
+        return false
+    end
+
+    local ns2_Player_OnUpdatePlayer, gg_Player_OnUpdatePlayer
+    gg_Player_OnUpdatePlayer = function(self, deltaTime)
+        ns2_Player_OnUpdatePlayer(self, deltaTime)
+        
+        if not self.pendingGrenade and CanResupplyGrenade(self) then
+            self.pendingGrenade = true
+            self:AddTimedCallback(ResupplyGrenade, 3)
+        end
+    end
+    ns2_Player_OnUpdatePlayer = Class_ReplaceMethod("Player", "OnUpdatePlayer", gg_Player_OnUpdatePlayer)
 
     local ns2_Player_Reset, gg_Player_Reset
     gg_Player_Reset = function(self)
@@ -27,7 +54,7 @@ if Server then
     local ns2_Player_Replace, gg_Player_Replace
     gg_Player_Replace = function(self, mapName, newTeamNumber, preserveWeapons, atOrigin, extraValues)
 
-        // handle class after respawn
+        -- handle class after respawn
         local spawnMapName = self:ClassAfterRespawn()
         if mapName == nil then mapName = spawnMapName end
         
@@ -42,13 +69,13 @@ if Server then
         local isSuicide = not doer and not attacker
         local isKilledByEnemy = attacker and GetAreEnemies(self, attacker) and attacker:isa("Player")
 
-        // destroy the weapons so they don't drop
+        -- destroy the weapons so they don't drop
         self.lastWeaponList = { }
         self:DestroyWeapons()
         
         Player.OnKill(self, attacker, doer, point, direction)
         
-        // Note: Flashlight is powered by Marine's beating heart. Eco friendly.
+        -- Note: Flashlight is powered by Marine's beating heart. Eco friendly.
         self:SetFlashlightOn(false)
         self.originOnDeath = self:GetOrigin()
         
@@ -56,7 +83,7 @@ if Server then
             attacker:AdjustExp(ConditionalValue(isHumiliation and not attacker:LastHumiliationTime(), 3, 1))
             attacker:AdjustGunGameData()
 
-            // set last humiliation time after adjusting game data (or it will removed it in case of level change)
+            -- set last humiliation time after adjusting game data (or it will removed it in case of level change)
             if isHumiliation then
                 attacker:LastHumiliationTime(Shared.GetTime())
             end
@@ -77,7 +104,7 @@ if Server then
 
         ns2_Exo_OnKill(self, attacker, doer, point, direction)
         
-        // override last exosuit layout with gun game data
+        -- override last exosuit layout with gun game data
         self.lastExoLayout = { self:ExoLayout() }
         
         if isKilledByEnemy then
@@ -96,7 +123,7 @@ if Server then
     ns2_Exo_OnKill = Class_ReplaceMethod("Exo", "OnKill", gg_Exo_OnKill)
 
 
-    // This will copy GunGame data from player to spectator and back for respawn purpose
+    -- This will copy GunGame data from player to spectator and back for respawn purpose
     local ns2_Player_CopyPlayerDataFrom, gg_Player_CopyPlayerDataFrom
     gg_Player_CopyPlayerDataFrom = function(self, player)
         ns2_Player_CopyPlayerDataFrom(self, player)
@@ -117,7 +144,7 @@ if Server then
 	
     local ns2_Marine_CopyPlayerDataFrom, gg_Marine_CopyPlayerDataFrom
     gg_Marine_CopyPlayerDataFrom = function(self, player)
-        self.preventWeapons = false   // enable give weapon
+        self.preventWeapons = false   -- enable give weapon
         Player.CopyPlayerDataFrom(self, player)
     end	
     ns2_Marine_CopyPlayerDataFrom = Class_ReplaceMethod("Marine", "CopyPlayerDataFrom", gg_Marine_CopyPlayerDataFrom)
@@ -125,13 +152,13 @@ if Server then
 
     local ns2_MarineSpectator_CopyPlayerDataFrom, gg_MarineSpectator_CopyPlayerDataFrom
     gg_MarineSpectator_CopyPlayerDataFrom = function(self, player)
-        self.preventWeapons = true    // disable give weapon
+        self.preventWeapons = true    -- disable give weapon
         Player.CopyPlayerDataFrom(self, player)
     end	
     ns2_MarineSpectator_CopyPlayerDataFrom = Class_ReplaceMethod("MarineSpectator", "CopyPlayerDataFrom", gg_MarineSpectator_CopyPlayerDataFrom)
     
     
-    // initial marine weapon should do nothing as we adds weapons by CopyPlayerDataFrom
+    -- initial marine weapon should do nothing as we adds weapons by CopyPlayerDataFrom
     local ns2_Marine_InitWeapons, gg_Marine_InitWeapons
     gg_Marine_InitWeapons = function(self)    
     end

@@ -1,13 +1,13 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--[[
+ 	GunGame NS2 Mod
+	ZycaR (c) 2016
+]]
 
 if Server then
 
     class 'GunGameTeam' (PlayingTeam)
 
-    // Set nanoshield only once (if its not already active)
+    -- Set nanoshield only once (if its not already active)
     local function ActivateSpawnProtection(player)
         if GetGamerules():GetGameStarted() and
            HasMixin(player, "NanoShieldAble") and
@@ -19,7 +19,7 @@ if Server then
         end
     end
 
-    // GunGame version of giving jetpack, to return jetpack player instance
+    -- GunGame version of giving jetpack, to return jetpack player instance
     local function GiveJetpack(player)
         local health = player:GetHealth()
         local weapon = player.GetActiveWeaponMapName and player:GetActiveWeaponMapName()
@@ -30,45 +30,45 @@ if Server then
     end
     
     local function ValidateExoSpawnLocation(player, origin)
-        // set spawn slightly higher then actual position
+        -- set spawn slightly higher then actual position
         local spawn = origin + Vector(0, 0.02, 0)
         local extents = Vector(Exo.kXZExtents, Exo.kYExtents, Exo.kXZExtents)
         
-        // check, whether the exo can fit to actual position
+        -- check, whether the exo can fit to actual position
         if GetHasRoomForCapsule(extents, spawn + Vector(0, extents.y, 0), CollisionRep.Move, PhysicsMask.Evolve, player) then
             return spawn
         end
         
-        // try up to 100 times to find open area nearby to place the big guy
+        -- try up to 100 times to find open area nearby to place the big guy
         for index = 1, 100 do
             local randomTry = GetRandomSpawnForCapsule(extents.y, extents.x, spawn, 0.5, 5, EntityFilterOne(player))
             if randomTry then return randomTry end
         end
         
-        // when everything fails, return original position
+        -- when everything fails, return original position
         return origin
     end
 
-    // GunGame version of giving exosuit, that exosuit can be given over another type of exosuit
+    -- GunGame version of giving exosuit, that exosuit can be given over another type of exosuit
     local function GiveExosuit(player, teamNumber, origin, exoLayout)
         player:DestroyWeapons()
 
-        // handle extra values: set exo layout
+        -- handle extra values: set exo layout
         local extraValues = { layout = exoLayout }
         local spawn = ValidateExoSpawnLocation(player, origin)
         local exo = player:Replace(Exo.kMapName, teamNumber, false, spawn, extraValues)
         
-        // effect of spawn exosuit
+        -- effect of spawn exosuit
         exo:TriggerEffects("spawn_exo")
         return exo
     end
 
-    // GunGame version of removing exosuit from player, there is eject in original ns2.
+    -- GunGame version of removing exosuit from player, there is eject in original ns2.
     local function ReplaceExosuitToMarine(player, teamNumber, origin)
-        // explosion effect .. nice effect and exo garbage around (like egg hatching)
+        -- explosion effect .. nice effect and exo garbage around (like egg hatching)
         player:TriggerEffects("death", { classname = player:GetClassName(), effecthostcoords = Coords.GetTranslation(player:GetOrigin()) })
 
-        // inform guns that its end of exo (stop effects)
+        -- inform guns that its end of exo (stop effects)
         local activeWeapon = player:GetActiveWeapon()
         if activeWeapon and activeWeapon.OnParentKilled then
             activeWeapon:OnParentKilled()
@@ -80,7 +80,7 @@ if Server then
     local function OnPlayerChangeClass(self, player)
         local mapName, exoLayout = player:ClassAfterRespawn(), player:ExoLayout()
         
-        // validate whether the variables are still valid since player is in class change queue
+        -- validate whether the variables are still valid since player is in class change queue
         if player:GetMapName() == mapName and (player.layout == nil or player.layout == exoLayout) then
             Print("GunGame: '"..self:GetName().."' class change failed ("..mapName.." class)")
             return
@@ -94,7 +94,7 @@ if Server then
             result = GiveJetpack(player)
         elseif mapName == Exo.kMapName then
             result = GiveExosuit(player, teamNumber, origin, exoLayout)
-            result.GunGameSpawnProtection = true    // spawn protect exosuit
+            result.GunGameSpawnProtection = true    -- spawn protect exosuit
         else 
             if player:GetMapName() == Exo.kMapName then
                 result = ReplaceExosuitToMarine(player, teamNumber, origin)
@@ -116,7 +116,7 @@ if Server then
         then
             table.insertunique(self.changeClassQueue, player:GetId())
         else
-            // if we don't change class, then at least activate nanoshield
+            -- if we don't change class, then at least activate nanoshield
             ActivateSpawnProtection(player)
         end
     end    
@@ -127,7 +127,7 @@ if Server then
             local player = Shared.GetEntity(playerId)
             if player and player:isa("Player") and player.ClassAfterRespawn then
                 local classChangePlayer = OnPlayerChangeClass(self, player)
-                // activate nanoshield after change class
+                -- activate nanoshield after change class
                 ActivateSpawnProtection(classChangePlayer)
             end
         end
@@ -137,7 +137,7 @@ if Server then
 
     function GunGameTeam:AddPlayer(player)
         local added = Team.AddPlayer(self, player)
-        player:SetTeamNumber(self:GetTeamNumber())  // fix for team number.
+        player:SetTeamNumber(self:GetTeamNumber())  -- fix for team number.
         player.teamResources = self.teamResources
         return added
     end
@@ -154,20 +154,20 @@ if Server then
             local capsuleHeight, capsuleRadius = player:GetTraceCapsule()
             local spawnPoint = spawn:GetOrigin() + Vector(0, 0.5, 0)
             
-            // validate choosed spawn point from lspawn location
+            -- validate choosed spawn point from lspawn location
             spawnPoint = ValidateSpawnPoint(spawnPoint, capsuleHeight, capsuleRadius, EntityFilterAll(), spawn:GetOrigin())
             
-            // when it's invalid (i.e. blocked by another player), then compute random spawn location
+            -- when it's invalid (i.e. blocked by another player), then compute random spawn location
             if not spawnPoint then
                 spawnPoint = GetRandomSpawnForCapsule(capsuleHeight, capsuleRadius, spawn:GetOrigin(), 1.0, 5.0, EntityFilterAll())
             end
 
-            // whether the random calculation fails, set original (+some offset from ground) as fallback
+            -- whether the random calculation fails, set original (+some offset from ground) as fallback
             if not spawnPoint then
                 spawnPoint = spawn:GetOrigin() + Vector(0, 0.2, 0)
             end
 
-            // Orient player towards tech point
+            -- Orient player towards tech point
             local lookAtPoint = spawn:GetOrigin() + Vector(0, 5, 0)
             local toSpawnPoint = GetNormalizedVector(lookAtPoint - spawnPoint)
             success = Team.RespawnPlayer(self, player, spawnPoint, Angles(GetPitchFromVector(toSpawnPoint), GetYawFromVector(toSpawnPoint), 0))
@@ -199,7 +199,7 @@ if Server then
         self.teamType = teamNumber
         self.respawnEntity = Marine.kMapName
 
-        // This is a special queue to place players in if the player change level
+        -- This is a special queue to place players in if the player change level
         self.changeClassQueue = table.array(16)
     end
 
@@ -208,7 +208,7 @@ if Server then
         local success, player = self:ReplaceRespawnPlayer(deadmeat, nil, nil)
         if success then
             player:SetCameraDistance(0)
-            //self:TriggerEffects("player_spawned")
+            --self:TriggerEffects("player_spawned")
             return true
         end
         Print("Warning: RespawnDeadMeat() failed to spawn the player")
@@ -221,7 +221,7 @@ if Server then
             self.timeLastRespawnPlayers = Shared.GetTime() - 1
         end
 
-        // not so often (only once a tick) for better performance
+        -- not so often (only once a tick) for better performance
         if self.timeLastRespawnPlayers + 1 <= Shared.GetTime() then
 
             local deadmeats = self:GetSortedRespawnQueue()
@@ -229,13 +229,13 @@ if Server then
             for i = 1, #deadmeats do
                 local deadmeat = deadmeats[i]
                 
-                // skip auto team balance queue
+                -- skip auto team balance queue
                 if not deadmeat:GetIsWaitingForTeamBalance() then
-                    // start respawning
+                    -- start respawning
                     deadmeat:SetIsRespawning(true)
                     self:RemovePlayerFromRespawnQueue(deadmeat)
                     if not RespawnDeadMeat(self, deadmeat) then 
-                        // put back to queue if respawning failed
+                        -- put back to queue if respawning failed
                         self:PutPlayerInRespawnQueue(deadmeat)
                         deadmeat:SetIsRespawning(false)
                     end
@@ -279,8 +279,8 @@ if Server then
         return winner
     end
     
-    // for wooza's extensions (and other mods) to supply expected biomass level getter
-    // .. gungame team supply both teams, then should supply all expected methods.
+    -- for wooza's extensions (and other mods) to supply expected biomass level getter
+    -- .. gungame team supply both teams, then should supply all expected methods.
     function GunGameTeam:GetBioMassLevel()
         return 0
     end

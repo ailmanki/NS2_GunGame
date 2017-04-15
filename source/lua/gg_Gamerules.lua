@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--[[
+ 	GunGame NS2 Mod
+	ZycaR (c) 2016
+]]
 
 ------------
 -- Server --

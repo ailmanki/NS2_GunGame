@@ -1,11 +1,11 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--[[
+ 	GunGame NS2 Mod
+  	ZycaR (c) 2016
+]]
 
 decoda_name = "Server"
 
-// choose spawn locations
+-- choose spawn locations
 Server.spawnLocationsList = table.array(32)
 Server.spawnLocationsRandomizer = Randomizer()
 Server.spawnLocationsRandomizer:randomseed(Shared.GetSystemTime())
@@ -24,28 +24,28 @@ local function InsertSpawnLocationsForTeam(spawns, teamNumber)
     end
 end
 
-// pseudorandom selection: get loaction exactly once, but in random order
+-- pseudorandom selection: get location exactly once, but in random order
 function Server:ChooseSpawnLocation(teamNumber)
     assert(type(teamNumber) == "number")
     assert(table.maxn(Server.spawnLocationsList) > 0, "Can't find Spawn Locations on the map.")
 
     local queue = Server.spawnLocationsQueues[teamNumber]
 
-    // re-fill proper queue whether it's empty
+    -- re-fill proper queue whether it's empty
     if  table.count(queue) < 1 then
         InsertSpawnLocationsForTeam(queue, teamNumber)
-        //Print("Refill Spawn Queue Team:"..teamNumber.." Count:"..table.count(queue))
+        --Print("Refill Spawn Queue Team:"..teamNumber.." Count:"..table.count(queue))
     end
    
     local index = Server.spawnLocationsRandomizer:random(1, table.count(queue))
-    //Print("Choose Spawn Location #" .. index)
+    --Print("Choose Spawn Location #" .. index)
     
     local spawnLocation = queue[index]
     table.remove(queue, index)
     return spawnLocation
 end
 
-// load spawn location
+-- load spawn location
 function GetLoadSpecial(mapName, groupName, values)
     local success = false
     
@@ -60,7 +60,7 @@ function GetLoadSpecial(mapName, groupName, values)
         entity:OnCreate()
         LoadEntityFromValues(entity, values)
         table.insert(Server.spawnLocationsList, entity)
-        //Print("Load Spawn Location .. #" .. #Server.spawnLocationsList)
+        --Print("Load Spawn Location .. #" .. #Server.spawnLocationsList)
         success = true
     elseif mapName == "pathing_settings" then
         ParsePathingSettings(values)

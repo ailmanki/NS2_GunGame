@@ -69,7 +69,6 @@ gg_Player_OnJoinTeam = function(self)
 end
 ns2_Player_OnJoinTeam = Class_ReplaceMethod("Player", "OnJoinTeam", gg_Player_OnJoinTeam)
 
-
 if Client then
 
 	function Player:InitializeSkin()
