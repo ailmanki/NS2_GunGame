@@ -1,11 +1,11 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
-// ---------------------------------------------
-// --- Rewards for GunGame tech level system ---
-// ---------------------------------------------
+-- ---------------------------------------------
+-- --- Rewards for GunGame tech level system ---
+-- ---------------------------------------------
 
 if(not HotReload) then
 	GunGameRewards = {}
@@ -23,9 +23,9 @@ local function InitWeaponsWithAxe(player)
     return false
 end
 
-//
-// Level: Pistol
-//
+--
+-- Level: Pistol
+--
 local function GivePistol(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = Pistol.kMapName
@@ -35,9 +35,9 @@ local function GivePistol(player)
     return Marine.kMapName
 end
 
-//
-// Level: Rifle
-//
+--
+-- Level: Rifle
+--
 local function GiveRifle(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = Rifle.kMapName
@@ -47,9 +47,9 @@ local function GiveRifle(player)
     return Marine.kMapName
 end
 
-//
-// Level: Shotgun
-//
+--
+-- Level: Shotgun
+--
 local function GiveShotgun(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = Shotgun.kMapName
@@ -59,9 +59,9 @@ local function GiveShotgun(player)
     return Marine.kMapName
 end
 
-//
-// Level: GrenadeLauncher
-//
+--
+-- Level: GrenadeLauncher
+--
 local function GiveGrenadeLauncher(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = GrenadeLauncher.kMapName
@@ -71,9 +71,9 @@ local function GiveGrenadeLauncher(player)
     return Marine.kMapName
 end
 
-//
-// Level: HeavyMachineGun
-//
+--
+-- Level: HeavyMachineGun
+--
 local function GiveHeavyMachineGun(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = HeavyMachineGun.kMapName
@@ -83,9 +83,9 @@ local function GiveHeavyMachineGun(player)
     return Marine.kMapName
 end
 
-//
-// Level: Rifle & Jetpack
-//
+--
+-- Level: Rifle & Jetpack
+--
 local function GiveRifleJetpack(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = Rifle.kMapName
@@ -95,9 +95,9 @@ local function GiveRifleJetpack(player)
     return JetpackMarine.kMapName
 end
 
-//
-// Level: Shotgun & Jetpack
-//
+--
+-- Level: Shotgun & Jetpack
+--
 local function GiveShotgunJetpack(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = Shotgun.kMapName
@@ -107,25 +107,25 @@ local function GiveShotgunJetpack(player)
     return JetpackMarine.kMapName
 end
 
-//
-// Level: Railgun Exosuit
-//
+--
+-- Level: Railgun Exosuit
+--
 local function GiveRailgunExo(player)
     player:ExoLayout("ClawRailgun")
     return Exo.kMapName
 end
 
-//
-// Level: Minigun Exosuit
-//
+--
+-- Level: Minigun Exosuit
+--
 local function GiveMinigunExo(player)
     player:ExoLayout("ClawMinigun")
     return Exo.kMapName
 end
 
-//
-// Level: Grenade & Jetpack
-//
+--
+-- Level: Grenade & Jetpack
+--
 local function GiveGrenadeJetpack(player)
     if InitWeaponsWithAxe(player) then
         local kWeaponMap = PulseGrenadeThrower.kMapName
@@ -135,19 +135,19 @@ local function GiveGrenadeJetpack(player)
     return JetpackMarine.kMapName
 end
 
-//
-// Level: Axe & Jetpack
-//
+--
+-- Level: Axe & Jetpack
+--
 local function GiveAxeJetpack(player)
     if InitWeaponsWithAxe(player) then
-        // no weapon just axe and jetpack
+        -- no weapon just axe and jetpack
     end
     return JetpackMarine.kMapName    
 end
 
-// reset rewards if any, and repopulate for each level
-// NextLvl   (integer)  .. How much exp is needed to level-up
-// GiveGunFn (function) .. Callback to give guns and set class to player
+-- reset rewards if any, and repopulate for each level
+-- NextLvl   (integer)  .. How much exp is needed to level-up
+-- GiveGunFn (function) .. Callback to give guns and set class to player
 for k,v in pairs(GunGameRewards) do GunGameRewards[k]=nil end
 
 local icons = kDeathMessageIcon
@@ -159,8 +159,8 @@ GunGameRewards[#GunGameRewards + 1]  =
     { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
     { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun, Type = nil           }
-//GunGameRewards[#GunGameRewards + 1]  = 
-//    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
+--GunGameRewards[#GunGameRewards + 1]  =
+--    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
     { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL     , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 

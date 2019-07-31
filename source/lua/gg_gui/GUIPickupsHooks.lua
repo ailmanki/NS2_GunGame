@@ -1,9 +1,9 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
-// show on closer range, that powerups are not so obvious
+-- show on closer range, that powerups are not so obvious
 local kPickupsVisibleRange = 9
 
 local function gg_GetNearbyPickups()

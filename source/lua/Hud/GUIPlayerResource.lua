@@ -1,8 +1,8 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
-// override for original lua\GUIPlayerResource.lua
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
+-- override for original lua\GUIPlayerResource.lua
 
 Script.Load("lua/gg_gui/GUIGunGameProgress.lua")
 
@@ -14,7 +14,7 @@ function CreatePlayerResourceDisplay(scriptHandle, hudLayer, frame, style)
     result.GunGameProgress = GUIGunGameProgress()
     result.GunGameProgress:Initialize()
 
-	// for NS2+ (and other mods) to supply expected child elements
+	-- for NS2+ (and other mods) to supply expected child elements
 	result.script = scriptHandle
     result.hudLayer = hudLayer
     result.frame = frame
@@ -23,7 +23,7 @@ function CreatePlayerResourceDisplay(scriptHandle, hudLayer, frame, style)
     return result
 end
 
-// for NS2+ (and other mods) to supply expected child elements
+-- for NS2+ (and other mods) to supply expected child elements
 function GUIPlayerResource:Initialize(style)
     self.style = style
     self.scale = 1
@@ -39,7 +39,7 @@ function GUIPlayerResource:Initialize(style)
 end
 
 function GUIPlayerResource:Reset(scale)
-    //self.GunGameProgress:Reset(scale)
+    --self.GunGameProgress:Reset(scale)
 end
 
 function GUIPlayerResource:Update(deltaTime, parameters)
@@ -47,7 +47,7 @@ function GUIPlayerResource:Update(deltaTime, parameters)
 end
 
 function GUIPlayerResource:OnAnimationCompleted(animatedItem, animationName, itemHandle)
-    //self.GunGameProgress:OnAnimationCompleted(animatedItem, animationName, itemHandle)
+    --self.GunGameProgress:OnAnimationCompleted(animatedItem, animationName, itemHandle)
 end
 
 function GUIPlayerResource:Destroy()

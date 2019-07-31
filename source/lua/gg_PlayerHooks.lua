@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
 Script.Load("lua/Class.lua")
 Script.Load("lua/Player.lua")
@@ -121,26 +121,26 @@ function Marine:GetActiveWeaponMapName()
     return activeWeapon ~= nil and activeWeapon.GetMapName and activeWeapon:GetMapName() or nil
 end
 
-// Don't drop weapons .. it's GunGame not charity.
-// It should destroy them, but for now just override Marine:Drop()
+-- Don't drop weapons .. it's GunGame not charity.
+-- It should destroy them, but for now just override Marine:Drop()
 Class_ReplaceMethod("Marine", "Drop", 
     function(self, weapon, ignoreDropTimeLimit, ignoreReplacementWeapon)
-	    return true // do nothing
+	    return true -- do nothing
     end
 )
 
-// Don't eject from exo .. same story as dropping weapons
+-- Don't eject from exo .. same story as dropping weapons
 Class_ReplaceMethod("Exo", "GetCanEject", 
     function(self)
         return false
     end
 )
 
-// fix because it switch players to first team only
+-- fix because it switch players to first team only
 Class_ReplaceMethod("MarineSpectator", "OnCreate", 
     function(self)
         TeamSpectator.OnCreate(self)
-        //self:SetTeamNumber(1)
+        --self:SetTeamNumber(1)
         if Client then
             InitMixin(self, TeamMessageMixin, { kGUIScriptName = "GUIMarineTeamMessage" })
         end
@@ -150,6 +150,6 @@ Class_ReplaceMethod("MarineSpectator", "OnCreate",
 Class_ReplaceMethod("MarineSpectator", "OnInitialized", 
     function(self)
         TeamSpectator.OnInitialized(self)
-        //self:SetTeamNumber(1)
+        --self:SetTeamNumber(1)
     end
 )

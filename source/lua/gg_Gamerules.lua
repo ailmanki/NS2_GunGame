@@ -27,9 +27,9 @@ if (Server) then
             Shared.Message("Player " .. player:GetName() .. " win GunGame round")
             PostGameViz("GunGame Ends Winner:" .. player:GetName())
 
-            // call it draw (internally)
+            -- call it draw (internally)
             self:SetGameState(kGameState.Draw)
-            // bloadcast custom network message that game ends
+            -- bloadcast custom network message that game ends
             SendGunGameEndNetworkMessage(player)
             
             self.team1:SetFrozenState(true)
@@ -87,18 +87,18 @@ if (Server) then
         return true
     end
     
-    // no tech points to be updated
+    -- no tech points to be updated
     local ns2_UpdateTechPoints = NS2Gamerules.UpdateTechPoints
     function NS2Gamerules:UpdateTechPoints()
     end
 
-    // customized constants (varions tweaks)
+    -- customized constants (varions tweaks)
     local ns2_GetPregameLength = NS2Gamerules.GetPregameLength
     function NS2Gamerules:GetPregameLength()
         return ConditionalValue(Shared.GetCheatsEnabled(), 0, kGunGamePregameLength)
     end
 
-    // do not check for commanders    
+    -- do not check for commanders
     local function ggCheckForNoCommander(self, onTeam, commanderType)
     end
     ReplaceLocals(NS2Gamerules.OnUpdate, { CheckForNoCommander = ggCheckForNoCommander })

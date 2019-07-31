@@ -4,11 +4,11 @@
 ]]
 
 if Client then
-    // create gui scripts for client only
+    -- create gui scripts for client only
     Script.Load("lua/gg_gui/GUIGunGameEnd.lua")
 end
 
-// Custome message when game ends
+-- Custome message when game ends
 local kGunGameEnd =
 {
     team = "integer (0 to 2)",
@@ -18,7 +18,7 @@ Shared.RegisterNetworkMessage("GunGameEnd", kGunGameEnd)
 
 if Server then
     
-    // Broadcast custom network message to GUI that game ends
+    -- Broadcast custom network message to GUI that game ends
     function SendGunGameEndNetworkMessage(winrar)
         local teamNumber = winrar.GetTeamNumber and winrar:GetTeamNumber()
         local winrarName = winrar.GetName and winrar:GetName()
@@ -40,7 +40,7 @@ elseif Client then
             Client.PlayMusic("sound/NS2.fev/victory")
         end
 
-        // Automatically end any performance logging when the round is done.
+        -- Automatically end any performance logging when the round is done.
         Shared.ConsoleCommand("p_endlog")
     end
 

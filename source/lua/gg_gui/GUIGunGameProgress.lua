@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
 
 Script.Load("lua/Globals.lua")
@@ -55,7 +55,7 @@ local function CreateProgressIcon(index, scale)
     icon:SetInheritsParentAlpha(false)
     icon:SetIsVisible(true)
     
-    // choose icon by index
+    -- choose icon by index
     local offset = index * kInventoryIconTextureHeight
     icon:SetTexturePixelCoordinates(0, offset - h, w, offset)
 
@@ -96,7 +96,7 @@ function GUIGunGameProgress:SetExpProgress(exp, ingame)
     self.lastGunGameExp = exp
     for index, icon in ipairs(self.expProgress) do
         local opacity = ConditionalValue(exp >= index, kActiveAlpha, kInactiveAlpha)
-        // different colors of skulls to indicate that game is running or not
+        -- different colors of skulls to indicate that game is running or not
         local color = ConditionalValue(ingame, Color(1, 1, 1, opacity), kGameNotStartedColor)
         icon:SetColor(color)
     end
@@ -119,7 +119,7 @@ function GUIGunGameProgress:CreateExpProgress(maxCount)
     local offsetY = 48 + kInventoryIconTextureHeight * 0.5
  
     for index = maxCount - 1, 0 , -1 do
-        // skull image (index == 1)
+        -- skull image (index == 1)
         local icon = CreateProgressIcon(1, 0.75)
         icon:SetAnchor(GUIItem.Right, GUIItem.Bottom)
         icon:SetPosition(Vector(-GUIScale(offsetX + kSpacing * index), -GUIScale(offsetY), 0))
@@ -142,7 +142,7 @@ function GUIGunGameProgress:SetLvlProgress(lvl, ingame)
             color = Color(1, 1, 1, kActiveAlpha)
         end
         
-        // different (red) color to indicate that game is not running
+        -- different (red) color to indicate that game is not running
         if not ingame and lvl ~= index then
             color = kGameNotStartedColor
         end
@@ -173,7 +173,7 @@ function GUIGunGameProgress:CreateLvlProgress(maxCount)
 
     for index = 1, maxCount do
 
-        // GunGame data for specified level
+        -- GunGame data for specified level
         local reward = GunGameRewards[index]
         
         local icon = CreateProgressIcon(reward.Weapon, 0.5)

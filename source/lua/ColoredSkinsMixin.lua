@@ -1,36 +1,36 @@
-//=============================================================================
-//
-// ColoredSkinsMixin (Skinning System)
-// 		Author: Brock 'McGlaspie' Gillespie
-//		@McGlaspie  -  mcglaspie@gmail.com		
-//
-// This Mixin is only applicable to Clients and should not be loaded in any
-// other Lua VM (I.e. Server or Predict). The expectedCallbacks should be
-// wrapped in a "if Client" condition as a result.
-//
-// Note: This does NOT apply a material to a given model. It REQUIRES that a
-// material with the Color Skins shader program is already being used by the
-// entity implementing this mixin. Also, it is import to note this does not
-// currently have support for screen fx. It is for texture mapped in-world
-// objects only.
-//
-// Keep in mind this is a Client focused Mixin. So, any changes to the colorization
-// or skin toggle should be based on game rules/data that get propogated over
-// the network. Otherwise, skin-state or color values won't be synchronized for
-// all players. It is strongly advised that the skin state and color values NOT
-// be set as network variables. This would significantly increase network traffic,
-// slow down rendering, and introduce server side lag.
-// 
-// TODO Explain usage of atlas textures
-// http://en.wikipedia.org/wiki/Texture_atlas
-//
-// FIXME This and its associated shaders are NOT compatible with OpenGL renderer
-// TODO Speed up this mixin and move Initskin to __initmixin
-//
-//=============================================================================
+--=============================================================================
+--
+-- ColoredSkinsMixin (Skinning System)
+-- 		Author: Brock 'McGlaspie' Gillespie
+--		@McGlaspie  -  mcglaspie@gmail.com
+--
+-- This Mixin is only applicable to Clients and should not be loaded in any
+-- other Lua VM (I.e. Server or Predict). The expectedCallbacks should be
+-- wrapped in a "if Client" condition as a result.
+--
+-- Note: This does NOT apply a material to a given model. It REQUIRES that a
+-- material with the Color Skins shader program is already being used by the
+-- entity implementing this mixin. Also, it is import to note this does not
+-- currently have support for screen fx. It is for texture mapped in-world
+-- objects only.
+--
+-- Keep in mind this is a Client focused Mixin. So, any changes to the colorization
+-- or skin toggle should be based on game rules/data that get propogated over
+-- the network. Otherwise, skin-state or color values won't be synchronized for
+-- all players. It is strongly advised that the skin state and color values NOT
+-- be set as network variables. This would significantly increase network traffic,
+-- slow down rendering, and introduce server side lag.
+--
+-- TODO Explain usage of atlas textures
+-- http:--en.wikipedia.org/wiki/Texture_atlas
+--
+-- FIXME This and its associated shaders are NOT compatible with OpenGL renderer
+-- TODO Speed up this mixin and move Initskin to __initmixin
+--
+--=============================================================================
 
 
-if Client then	//Entire Mixin only executes on Client
+if Client then	--Entire Mixin only executes on Client
 	
 	
 Shared.PrecacheSurfaceShader("shaders/ColoredSkins.surface_shader")
@@ -42,11 +42,11 @@ Shared.PrecacheSurfaceShader("shaders/ColoredSkinsViewModel.surface_shader")
 Shared.PrecacheSurfaceShader("shaders/ColoredSkinsViewModel_emissive.surface_shader")
 
 
-gColoredSkinsToggle = true	//global to specify if colored skins are Active
+gColoredSkinsToggle = true	--global to specify if colored skins are Active
 gColorMapIndexOverrideEnabled = false
 gColorMapIndexOverride = 0
-gColorMapMaxIndex = 4		//Ideally, this should be defined per Class member
-//Above value only allows for 4x4 sized color map texture...which should be ample
+gColorMapMaxIndex = 4		--Ideally, this should be defined per Class member
+--Above value only allows for 4x4 sized color map texture...which should be ample
 gColorOverridesEnabled = false
 gSkinColorOverrides = {
 	["base"] = nil,
@@ -56,7 +56,7 @@ gSkinColorOverrides = {
 
 
 
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 ColoredSkinsMixin = CreateMixin( ColoredSkinsMixin )
@@ -73,25 +73,25 @@ ColoredSkinsMixin.expectedCallbacks = {
 	GetAccentSkinColor = "Should return a Color object. This is applied to emissive textures",
 	GetTrimSkinColor = "Should return Color object",
 	InitializeSkin = "Setup routine for any customization of skin colors applied to material"
-	//IntializeSkin() should ALWAYS be called in an Entity's OnInitialize() method within a "is Client" check
-	//This is required in order for the color values to correctly propogate to the shader(s). If not, the entity
-	//will appear black due to the default Colors variables being initialized that way.
+	--IntializeSkin() should ALWAYS be called in an Entity's OnInitialize() method within a "is Client" check
+	--This is required in order for the color values to correctly propogate to the shader(s). If not, the entity
+	--will appear black due to the default Colors variables being initialized that way.
 	
 }
 
-//TODO Add GetXYZ Override optional methods and update logic to support them
-// - will provide single classes or other mixins easy way to provide finer control
+--TODO Add GetXYZ Override optional methods and update logic to support them
+-- - will provide single classes or other mixins easy way to provide finer control
 ColoredSkinsMixin.optionalCallbacks = {}
 
 
-//-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-//Initial color values are defined when implementing Entity is initialized.
-//This does not prevent these colors from being updated according to a
-//specific case or game condition. Generally, you do NOT want to be getting
-//a "fresh" (I.e. calling Get****SkinColor() every time OnUpdateRender() is
-//run. This causes an FPS drop and will increase the more skinned entities 
-//are on screen.
+--Initial color values are defined when implementing Entity is initialized.
+--This does not prevent these colors from being updated according to a
+--specific case or game condition. Generally, you do NOT want to be getting
+--a "fresh" (I.e. calling Get****SkinColor() every time OnUpdateRender() is
+--run. This causes an FPS drop and will increase the more skinned entities
+--are on screen.
 function ColoredSkinsMixin:__initmixin()
 	
 	self.skinBaseColor = Color(0, 0, 0, 0)
@@ -100,7 +100,7 @@ function ColoredSkinsMixin:__initmixin()
 	
 	self.skinAtlasIndex = 0
 	
-	self.skinColoringEnabled = true	//Allows for colored skins to be toggled on per-entity basis
+	self.skinColoringEnabled = true	--Allows for colored skins to be toggled on per-entity basis
 	
 end
 
@@ -121,7 +121,7 @@ function ColoredSkinsMixin:SetAtlasIndex( index )
 end
 
 
-function ColoredSkinsMixin:ResetSkin()	//Unused
+function ColoredSkinsMixin:ResetSkin()	--Unused
 	self:InitializeSkin()
 	self:InstanceMaterials()
 end
@@ -130,14 +130,14 @@ end
 function ColoredSkinsMixin:OnKillClient()
 end
 
-/*
+--[[
 function ColoredSkinsMixin:OnUpdate( deltaTime )
 	PROFILE("ColoredSkinsMixin:OnUpdate")
 end
-*/
+]]
 
-function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or introducing a race
-												//condition for animated models?
+function ColoredSkinsMixin:OnUpdateRender()		--??? Is this having an impact or introducing a race
+												--condition for animated models?
 	
 	PROFILE("ColoredSkinsMixin:OnUpdateRender")
 	
@@ -182,25 +182,25 @@ function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or i
 		model:SetMaterialParameter( "modelColorTrimG", trimColor.g )
 		model:SetMaterialParameter( "modelColorTrimB", trimColor.b )
 		
-		//Set skinning enabled state
+		--Set skinning enabled state
 		model:SetMaterialParameter( "colorizeModel", enabled )
 		
-		//Set Color Map Index of atlas texture
+		--Set Color Map Index of atlas texture
 		model:SetMaterialParameter( "colorMapIndex", colorMapAtlasIndex )
 		
 	end		
 	
 	
-//Handle "Special" cases from here on -------------------------------------
+--Handle "Special" cases from here on -------------------------------------
 	
-	//TODO Devise cleaner more segregated way to below equipment handling.
-	// - Should be a child-model check for self "self:GetHasChildren()", etc.
-	// - Should be dependent upon the implementing class to handle via expectedCallbacks
+	--TODO Devise cleaner more segregated way to below equipment handling.
+	-- - Should be a child-model check for self "self:GetHasChildren()", etc.
+	-- - Should be dependent upon the implementing class to handle via expectedCallbacks
 	
-	//Attachment based equipment
+	--Attachment based equipment
 	if self.GetHasEquipment and self.GetJetpack then
 		
-		local jetpack = self:GetJetpack()	//Faster way to get JP/Equip?
+		local jetpack = self:GetJetpack()	--Faster way to get JP/Equip?
 		
 		if jetpack ~= nil then
 		
@@ -218,10 +218,10 @@ function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or i
 				jpModel:SetMaterialParameter( "modelColorTrimG", trimColor.g )
 				jpModel:SetMaterialParameter( "modelColorTrimB", trimColor.b )
 				
-				//Set enabled state
+				--Set enabled state
 				jpModel:SetMaterialParameter( "colorizeModel", enabled )
 				
-				//Set Color Map Index of atlas texture
+				--Set Color Map Index of atlas texture
 				jpModel:SetMaterialParameter( "colorMapIndex", colorMapAtlasIndex )
 				
 			end
@@ -237,7 +237,7 @@ function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or i
 	
 		if viewEnt then
 			
-			local viewModel = viewEnt:GetRenderModel()	//faster means to get ViewModel?
+			local viewModel = viewEnt:GetRenderModel()	--faster means to get ViewModel?
 			
 			if viewModel then
 				
@@ -251,10 +251,10 @@ function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or i
 				viewModel:SetMaterialParameter( "modelColorTrimG", trimColor.g )
 				viewModel:SetMaterialParameter( "modelColorTrimB", trimColor.b )
 				
-				//Set enabled state
+				--Set enabled state
 				viewModel:SetMaterialParameter( "colorizeModel", enabled )
 				
-				//Set Color Map Index of atlas texture
+				--Set Color Map Index of atlas texture
 				viewModel:SetMaterialParameter( "colorMapIndex", colorMapAtlasIndex )
 				
 			end
@@ -264,28 +264,28 @@ function ColoredSkinsMixin:OnUpdateRender()		//??? Is this having an impact or i
 	end
 	
 end
-//End ColoredSkinsMixin -------------------------------------------------------
+--End ColoredSkinsMixin -------------------------------------------------------
 
 
 
 
-//-----------------------------------------------------------------------------
-//Debugging & Texture Development Tools ---------------------------------------
-//	Note: All of these utiliy function assume Utility.lua is in scope
+-------------------------------------------------------------------------------
+--Debugging & Texture Development Tools ---------------------------------------
+--	Note: All of these utiliy function assume Utility.lua is in scope
 
 
-//TODO Move below and create additional utility functions
-//Debugging and/or for when "complex" material parameter values allowed
+--TODO Move below and create additional utility functions
+--Debugging and/or for when "complex" material parameter values allowed
 local function ColorAsParam( color )
 	return string.format("(%0.3f, %0.3f, %0.3f)", color.r, color.g, color.b )
 end
 
 local function ColorAsParamInt( color )
-	//return string.format("(%0.3f, %0.3f, %0.3f)", color.r, color.g, color.b )	//TODO adjust for returning Int vals
+	--return string.format("(%0.3f, %0.3f, %0.3f)", color.r, color.g, color.b )	--TODO adjust for returning Int vals
 end
 
 
-//FIXME not getting player or performing trace...
+--FIXME not getting player or performing trace...
 local function OnCommandGetEntityColorInfo()
 	
 	if Shared.GetCheatsEnabled() then
@@ -293,9 +293,9 @@ local function OnCommandGetEntityColorInfo()
 		local player = Client.GetLocalPlayer()
 		if player then
 			
-			//TODO testing using player:GetCrossHairTarget()
+			--TODO testing using player:GetCrossHairTarget()
 			
-			local viewCoords = player:GetViewAngles():GetCoords()	//FIXME This is not working in this context
+			local viewCoords = player:GetViewAngles():GetCoords()	--FIXME This is not working in this context
 			
 			local trace = Shared.TraceRay( 
 				player:GetOrigin(), 
@@ -346,7 +346,7 @@ local function OnCommandChangeColorMapIndex(enable)
 
 	if Shared.GetCheatsEnabled() then
 		
-		//Toggle flipping through indicies
+		--Toggle flipping through indicies
 		if enable == "true" or enable == "1" then
 			gColorMapIndexOverrideEnabled = true
 		elseif enable == "0" or enable == "false" then
@@ -356,7 +356,7 @@ local function OnCommandChangeColorMapIndex(enable)
 		if gColorMapIndexOverrideEnabled then
 			
 			if gColorMapIndexOverride + 1 > gColorMapMaxIndex then
-				gColorMapIndexOverride = 0	//Roll back to begining of atlas
+				gColorMapIndexOverride = 0	--Roll back to begining of atlas
 			else
 				gColorMapIndexOverride = gColorMapIndexOverride + 1
 			end
@@ -373,15 +373,15 @@ local function OnCommandOverrideSkinColor(layer, color)
 	if Shared.GetCheatsEnabled() then
 	
 		if not layer and not color and not team then
-		//toggle color override state
+		--toggle color override state
 			gColorOverridesEnabled = ConditionalValue( gColorOverridesEnabled, false, true )
 		end
 		
-		if layer and color then	//Require both params
+		if layer and color then	--Require both params
 			
 			if layer == "base" or layer == "accent" or layer == "trim" then
 				
-				//Color values override all colorized model in world for specified layer
+				--Color values override all colorized model in world for specified layer
 				local red, green, blue = 0
 				local validColor = true
 				local colorValues = StringSplit( color, ",", 3)
@@ -414,7 +414,7 @@ local function OnCommandOverrideSkinColor(layer, color)
 				end
 				
 				if validColor then
-					gSkinColorOverrides[layer] = Color( ColorValue(red), ColorValue(green), ColorValue(blue), 1 )	//alpha ignored
+					gSkinColorOverrides[layer] = Color( ColorValue(red), ColorValue(green), ColorValue(blue), 1 )	--alpha ignored
 					Print("ColoredSkinsMixin: Set global color override: Layer[" .. layer .. "] as " .. ColorAsParam( gSkinColorOverrides[layer] ) )
 				else
 					Print("ColoredSkinsMixin: Invalid color parameter supplied")
@@ -430,14 +430,14 @@ end
 
 
 
-Event.Hook( "Console_skins", OnCommandToggleColoredSkins )			//Toggle
-Event.Hook( "Console_skinsindex", OnCommandChangeColorMapIndex )	//Toggle/Cycler
-Event.Hook( "Console_skins_colors", OnCommandOverrideSkinColor )	//Toggle and value setter
+Event.Hook( "Console_skins", OnCommandToggleColoredSkins )			--Toggle
+Event.Hook( "Console_skinsindex", OnCommandChangeColorMapIndex )	--Toggle/Cycler
+Event.Hook( "Console_skins_colors", OnCommandOverrideSkinColor )	--Toggle and value setter
 
 Event.Hook( "Console_skins_entinfo", OnCommandGetEntityColorInfo )	
 
 
 
 
-end	//end Client
+end	--end Client
 

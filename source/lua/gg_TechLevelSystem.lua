@@ -1,7 +1,7 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
 kLevelUpSoundName = PrecacheAsset("sound/NS2.fev/marine/structures/power_up")
 kLevelDownSoundName = PrecacheAsset("sound/NS2.fev/marine/common/squad_spawn")
@@ -10,24 +10,24 @@ if Server then
 
     function Player:ResetGunGameData()
 
-        // level = every 3 kills (except grenade)
+        -- level = every 3 kills (except grenade)
         self.GunGameLevel = 1
 
-        // kill based (+1 .. kill, -3 .. death by axe or suicide, etc.)
+        -- kill based (+1 .. kill, -3 .. death by axe or suicide, etc.)
         self.GunGameExp = 0
 
-        // nanoshield after respawn and every time exosuit is spawned
+        -- nanoshield after respawn and every time exosuit is spawned
         self.GunGameSpawnProtection = false
 
-        // actual player class for respawn
+        -- actual player class for respawn
         self.ggData = {}
         self.ggData.classAfterRespawn = nil
         self.ggData.exoLayout = nil
        
-        // save the last team
+        -- save the last team
         self.ggData.lastTeamNumber = self:GetTeamNumber()
 
-        // time, when player kill by axe / claw
+        -- time, when player kill by axe / claw
         self.ggData.lastHumiliationTime = nil
     end
     
@@ -54,11 +54,11 @@ if Server then
     local function GunGameLevelUp(player, value)
         local lastReward = GunGameRewards[player.GunGameLevel]
 
-        // this might (and should) change reward
+        -- this might (and should) change reward
         ChangeGunGameLevel(player, value)
         player.ggData.lastHumiliationTime = nil
 
-        // remove acquired exp based on last next level exp value
+        -- remove acquired exp based on last next level exp value
         player.GunGameExp = player.GunGameExp - lastReward.NextLvl
         
         if player.GunGameLevel <= kMaxGunGameLevel then
@@ -72,7 +72,7 @@ if Server then
         ChangeGunGameLevel(player, -value)
         player.ggData.lastHumiliationTime = nil
         
-        // re-calculate remaining exp when level down
+        -- re-calculate remaining exp when level down
         if player.GunGameLevel < lastLevel then
             local reward = GunGameRewards[player.GunGameLevel]
             player.GunGameExp = player.GunGameExp + reward.NextLvl
@@ -96,7 +96,7 @@ if Server then
             ChangeGunGameLevel(self, 0)
         end
         
-        // make sure, that do not overflow next level or less than zero
+        -- make sure, that do not overflow next level or less than zero
         local reward = GunGameRewards[self.GunGameLevel]
         if reward ~= nil and reward.NextLvl > 0 then
             self.GunGameExp = Clamp(self.GunGameExp, 0, reward.NextLvl - 1)
@@ -111,14 +111,14 @@ if Server then
         end
     end
     
-    // Winning condition is passing max available GunGame level (one level above axe)
+    -- Winning condition is passing max available GunGame level (one level above axe)
     function Player:IsWinner()
         return (self.GunGameLevel > kMaxGunGameLevel)
     end
 
     function Player:ClassAfterRespawn(mapName)
         if mapName ~= nil then
-            // store given player class for respawn
+            -- store given player class for respawn
             self.ggData.classAfterRespawn = mapName
         end
         return self.ggData.classAfterRespawn

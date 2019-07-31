@@ -1,16 +1,16 @@
-//
-//	GunGame NS2 Mod
-//	ZycaR (c) 2016
-//
+--
+--	GunGame NS2 Mod
+--	ZycaR (c) 2016
+--
 
 kNanoShieldDelay = 0.1
 
-// modify nanoshield activation to force start after specific period of time
+-- modify nanoshield activation to force start after specific period of time
 local ns2_ActivateNanoShield = NanoShieldMixin.ActivateNanoShield
 function NanoShieldMixin:ActivateNanoShield()
 
-    // clear sound effect if activate twice
-    // NOTE: When player respawns and change class to exo it produces errors on server.
+    -- clear sound effect if activate twice
+    -- NOTE: When player respawns and change class to exo it produces errors on server.
     if Server and self.shieldLoopSound then
         DestroyEntity(self.shieldLoopSound)
         self.shieldLoopSound = nil
