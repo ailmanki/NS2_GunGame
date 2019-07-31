@@ -280,9 +280,10 @@ local function ColorAsParam( color )
 	return string.format("(%0.3f, %0.3f, %0.3f)", color.r, color.g, color.b )
 end
 
+--[[
 local function ColorAsParamInt( color )
 	--return string.format("(%0.3f, %0.3f, %0.3f)", color.r, color.g, color.b )	--TODO adjust for returning Int vals
-end
+end]]
 
 
 --FIXME not getting player or performing trace...
