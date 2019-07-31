@@ -328,8 +328,8 @@ kGunGameBrainActions =
         local pos = marine:GetOrigin()
 
         local weapon = marine:GetActiveWeapon()
-        local bestPack = nil
-        local bestDist = nil
+        local bestPack
+        local bestDist
 
         if weapon ~= nil and weapon:isa("ClipWeapon") then
 

@@ -267,7 +267,7 @@ if Server then
     end
 
     function GunGameTeam:GetWinner()
-        local winner = nil
+        local winner
 
         if GetGamerules():GetGameStarted() and not Shared.GetCheatsEnabled() then
             local function FilterWinner( player )

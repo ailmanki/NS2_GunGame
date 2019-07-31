@@ -180,7 +180,7 @@ function GUIGunGameProgress:CreateLvlProgress(maxCount)
         icon:SetAnchor(GUIItem.Middle, GUIItem.Bottom)
 
         local stacking = offsetY
-        local playerType = nil
+        local playerType
         if reward.Type ~= nil then
             stacking = 48 + h * 0.65
             playerType = CreateProgressIcon(reward.Type, 0.5)
