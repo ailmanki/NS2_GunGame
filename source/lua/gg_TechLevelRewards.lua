@@ -159,8 +159,8 @@ GunGameRewards[#GunGameRewards + 1]  =
     { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
     { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun, Type = nil           }
---GunGameRewards[#GunGameRewards + 1]  =
---    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
+GunGameRewards[#GunGameRewards + 1]  =
+    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
     { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL     , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
