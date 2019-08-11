@@ -5,7 +5,7 @@ normalMap = "models/marine/male/male_body_normal.dds"
 emissiveMap = "models/marine/male/male_anniv_body_illum.dds"
 specularMap = "models/marine/male/male_anniv_body_spec.dds"
 
-modelColorMap = "models/marine/male/male_anniv_colormap.dds"
+modelColorMap = "models/marine/male/male_anniv_body_colormap.dds"
 
 numColumns = 1
 numRows = 2
