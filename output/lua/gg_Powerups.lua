@@ -37,8 +37,11 @@ end
 
 function Powerups:OnInitialized()
     Entity.OnInitialized(self)
-
-    self.dropType = Clamp(self.dropType, 0, 2)
+    if self.dropType ~= nil then
+        self.dropType = Clamp(self.dropType, 0, 2)
+    else
+        self.dropType = 0
+    end
     self.drop = kPowerupDrops[self.dropType]
     self.dropRadius = Clamp(self.dropRadius, 1.0, 100.0)
     self.dropRate = Clamp(self.dropRate, 12, 360)
