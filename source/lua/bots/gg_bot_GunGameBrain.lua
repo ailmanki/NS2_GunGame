@@ -12,15 +12,24 @@ class 'GunGameBrain' (PlayerBrain)
 
 function GunGameBrain:Initialize()
     PlayerBrain.Initialize(self)
+    self.senses = CreateGunGameBrainSenses()
+    table.insert(gGunGameBrains, self)
 
     self.expectedPlayerClass = nil
     self.expectedTeamNumber = nil
-    
-    self.senses = CreateGunGameBrainSenses()
-    table.insert(gGunGameBrains, self)
+
 end
 
 function GunGameBrain:Update( bot, move )
+
+    if gBotDebug:Get("spam") then
+        Print("GunGameBrain:Update")
+    end
+
+    if PlayerBrain.Update( self, bot, move ) == false then
+        return false
+    end
+
     local player = bot:GetPlayer()
     self.expectedPlayerClass = player:GetClassName()
     self.expectedTeamNumber = player:GetTeamNumber()

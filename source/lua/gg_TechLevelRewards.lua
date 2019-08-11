@@ -154,10 +154,11 @@ local icons = kDeathMessageIcon
 local kPulseGrenade = icons.PulseGrenade
 
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol , Type = nil           }
+    { NextLvl = 1, GiveGunFn = GivePistol           , Weapon = icons.Pistol , Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
+    { NextLvl = 1, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
+
+--[[GunGameRewards[#GunGameRewards + 1]  =
     { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun, Type = nil           }
 GunGameRewards[#GunGameRewards + 1]  =
     { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
@@ -174,7 +175,7 @@ GunGameRewards[#GunGameRewards + 1]  =
 GunGameRewards[#GunGameRewards + 1] = 
     { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = kPulseGrenade, Type = icons.Jetpack }
 GunGameRewards[#GunGameRewards + 1] = 
-    { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe    , Type = icons.Jetpack }
+    { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe    , Type = icons.Jetpack }]]
 
 kMaxGunGameLevel = table.count(GunGameRewards)
 
