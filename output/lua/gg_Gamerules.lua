@@ -32,8 +32,8 @@ if (Server) then
             -- bloadcast custom network message that game ends
             SendGunGameEndNetworkMessage(player)
             
-            self.team1:SetFrozenState(true)
-            self.team2:SetFrozenState(true)
+            --self.team1:SetFrozenState(true)
+            --self.team2:SetFrozenState(true)
 
             self.team1:ClearRespawnQueue()
             self.team2:ClearRespawnQueue()
