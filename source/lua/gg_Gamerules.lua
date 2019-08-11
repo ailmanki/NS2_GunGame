@@ -24,8 +24,8 @@ if (Server) then
     function NS2Gamerules:EndGame(player)
         if GetGamerules():GetGameStarted() then
             
-            Shared.Message("Player " .. player:GetName() .. " win GunGame round")
-            PostGameViz("GunGame Ends Winner:" .. player:GetName())
+            Shared.Message("Player " .. player:GetName() .. " wins GunGame round")
+            PostGameViz("GunGame Winner:" .. player:GetName())
 
             -- call it draw (internally)
             self:SetGameState(kGameState.Draw)
