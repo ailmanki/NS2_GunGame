@@ -24,8 +24,9 @@ function CreatePlayerResourceDisplay(scriptHandle, hudLayer, frame, style)
 end
 
 -- for NS2+ (and other mods) to supply expected child elements
-function GUIPlayerResource:Initialize(style)
+function GUIPlayerResource:Initialize(style, teamNumber)
     self.style = style
+    self.teamNumber = teamNumber
     self.scale = 1
     self.lastPersonalResources = 0
 	
