@@ -1,5 +1,12 @@
 #output folder
-output/**
+output/fastload/**
+output/lua/**
+output/maps/**
+output/materials/**
+output/screens/**
+output/shaders/**
+output/shaders/**
+
 mod.settings
 
 # Windows image file caches
