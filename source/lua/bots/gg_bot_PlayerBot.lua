@@ -7,8 +7,10 @@ Script.Load("lua/bots/gg_bot_GunGameBrain.lua")
 
 function PlayerBot:_LazilyInitBrain()
 
+    local player = self:GetPlayer()
+    if not player then return end
+
     if self.brain == nil then
-        local player = self:GetPlayer()
 
         if player:isa("Marine") or player:isa("JetpackMarine") or player:isa("Exo") then
             self.brain = GunGameBrain()
@@ -26,7 +28,7 @@ function PlayerBot:_LazilyInitBrain()
 
         if self.brain ~= nil then
             self.brain:Initialize()
-            self:GetPlayer().botBrain = self.brain
+            player.botBrain = self.brain
             self.aim = BotAim()
             self.aim:Initialize(self)
         end
@@ -34,9 +36,9 @@ function PlayerBot:_LazilyInitBrain()
     else
 
         -- destroy brain if we are ready room
-        if self:GetPlayer():isa("ReadyRoomPlayer") then
+        if player:isa("ReadyRoomPlayer") then
             self.brain = nil
-            self:GetPlayer().botBrain = nil
+            player.botBrain = nil
         end
 
     end
