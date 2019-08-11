@@ -2,7 +2,7 @@ shader = "shaders/ColoredSkins_Emissive.surface_shader"
 
 emissiveMap = "models/marine/female/female_assault_visor.dds"
 
-modelColorMap = "models/marine/female/female_assault_visor_colorMap.dds"
+modelColorMap = "models/marine/female/female_assault_visor_colormap.dds"
 numColumns = 1
 numRows = 1
 

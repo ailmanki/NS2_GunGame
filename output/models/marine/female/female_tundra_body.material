@@ -5,7 +5,7 @@ normalMap = "models/marine/female/female_v2_body_normal.dds"
 specularMap = "models/marine/female/female_tundra_body_spec.dds"
 emissiveMap = "models/marine/male/illum.dds"
 
-modelColorMap = "models/marine/female/female_tundra_body_colorMap.dds"
+modelColorMap = "models/marine/female/female_tundra_body_colormap.dds"
 numColumns = 1
 numRows = 2
 

@@ -5,7 +5,7 @@ normalMap = "models/marine/exosuit/minigun_view_normal.dds"
 specularMap = "models/marine/exosuit/minigun_view_spec.dds"
 
 
-modelColorMap = "models/marine/exosuit/minigun_view_colorMap.dds"
+modelColorMap = "models/marine/exosuit/minigun_view_colormap.dds"
 
 numColumns = 1
 numRows = 2
