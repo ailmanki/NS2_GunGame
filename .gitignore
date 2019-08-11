@@ -1,11 +1,12 @@
 #output folder
 output/fastload/**
-output/lua/**
 output/maps/**
 output/materials/**
 output/screens/**
 output/shaders/**
 output/shaders/**
+output/editor_setup.xml
+output/game_setup.xml
 
 mod.settings
 
