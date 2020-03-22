@@ -23,4 +23,5 @@ do
     -- various fixes for errors
     ModLoader.SetupFileHook( "lua/bots/PlayerBrain.lua", "lua/gg_ns2fix/gg_PlayerBrain.lua" , "post" )
     ModLoader.SetupFileHook( "lua/Weapons/Marine/Railgun.lua", "lua/gg_ns2fix/gg_Railgun.lua" , "post" )
+    ModLoader.SetupFileHook( "lua/GUI/GUIObject.lua", "lua/gg_ns2fix/gg_GUIObject.lua" , "replace" )
 end
