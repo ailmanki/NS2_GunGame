@@ -32,14 +32,22 @@ if Server then
 elseif Client then
 
     function OnGunGameEnd(msg)
-        if Client.GetLocalPlayer() then
+        local localPlayer = Client.GetLocalPlayer()
+        if localPlayer then
             local guiGunGameEnd = GetGUIManager():CreateGUIScript("gg_gui/GUIGunGameEnd")
             if guiGunGameEnd and guiGunGameEnd.ShowGunGameEnd then
                 guiGunGameEnd:ShowGunGameEnd(msg.team, msg.winrar)
             end
+            local playerTeamType = localPlayer:GetTeamType()
+            if playerTeamType == kNeutralTeamType then playerTeamType = msg.win end
+            if playerTeamType == kNeutralTeamType then playerTeamType = kMarineTeamType end
+    
+            local playerWin = ( msg.team == playerTeamType )
+            local playerDraw = ( msg.team == kNeutralTeamType )
             Client.PlayMusic("sound/NS2.fev/victory")
+            ClientUI.GetScript("GUIGameEnd"):SetGameEnded( playerWin, playerDraw, playerTeamType )
         end
-
+        
         -- Automatically end any performance logging when the round is done.
         Shared.ConsoleCommand("p_endlog")
     end

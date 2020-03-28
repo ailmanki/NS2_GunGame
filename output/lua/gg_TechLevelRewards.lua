@@ -72,6 +72,18 @@ local function GiveGrenadeLauncher(player)
 end
 
 --
+-- Level: Flamethrower
+--
+local function GiveFlamethrower(player)
+    if InitWeaponsWithAxe(player) then
+        local kWeaponMap = Flamethrower.kMapName
+        player:GiveItem(kWeaponMap)
+        player:SetActiveWeapon(kWeaponMap)
+    end
+    return Marine.kMapName
+end
+
+--
 -- Level: HeavyMachineGun
 --
 local function GiveHeavyMachineGun(player)
@@ -115,6 +127,10 @@ local function GiveRailgunExo(player)
     return Exo.kMapName
 end
 
+local function GiveDualRailgunExo(player)
+    player:ExoLayout("RailgunRailgun")
+    return Exo.kMapName
+end
 --
 -- Level: Minigun Exosuit
 --
@@ -123,6 +139,10 @@ local function GiveMinigunExo(player)
     return Exo.kMapName
 end
 
+local function GiveDualMinigunExo(player)
+    player:ExoLayout("MinigunMinigun")
+    return Exo.kMapName
+end
 --
 -- Level: Grenade & Jetpack
 --
@@ -153,28 +173,20 @@ for k,v in pairs(GunGameRewards) do GunGameRewards[k]=nil end
 local icons = kDeathMessageIcon
 local kPulseGrenade = icons.PulseGrenade
 
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol , Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle  , Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun, Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  =
-    { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun, Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL     , Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRifleJetpack     , Weapon = icons.Rifle  , Type = icons.Jetpack }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   , Weapon = icons.Shotgun, Type = icons.Jetpack }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveRailgunExo       , Weapon = icons.Railgun, Type = nil           }
-GunGameRewards[#GunGameRewards + 1]  = 
-    { NextLvl = 3, GiveGunFn = GiveMinigunExo       , Weapon = icons.Minigun, Type = nil           }
-GunGameRewards[#GunGameRewards + 1] = 
-    { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = kPulseGrenade, Type = icons.Jetpack }
-GunGameRewards[#GunGameRewards + 1] = 
-    { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe    , Type = icons.Jetpack }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GivePistol           , Weapon = icons.Pistol          , Type = nil           }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveRifle            , Weapon = icons.Rifle           , Type = nil           }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveShotgun          , Weapon = icons.Shotgun         , Type = nil           }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveFlamethrower     , Weapon = icons.Flamethrower    , Type = nil      }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveHeavyMachineGun  , Weapon = icons.HeavyMachineGun , Type = nil   }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveGrenadeLauncher  , Weapon = icons.GL              , Type = nil           }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveRifleJetpack     , Weapon = icons.Rifle           , Type = icons.Jetpack }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveShotgunJetpack   , Weapon = icons.Shotgun         , Type = icons.Jetpack }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveRailgunExo       , Weapon = icons.Claw            , Type = icons.Railgun    }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveDualRailgunExo   , Weapon = icons.Railgun         , Type =  icons.Railgun}
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveMinigunExo       , Weapon = icons.Claw            , Type = icons.Minigun    }
+GunGameRewards[#GunGameRewards + 1]  = { NextLvl = 3, GiveGunFn = GiveDualMinigunExo   , Weapon = icons.Minigun         , Type = icons.Minigun }
+GunGameRewards[#GunGameRewards + 1] =  { NextLvl = 1, GiveGunFn = GiveGrenadeJetpack   , Weapon = kPulseGrenade         , Type = icons.Jetpack }
+GunGameRewards[#GunGameRewards + 1] =  { NextLvl = 1, GiveGunFn = GiveAxeJetpack       , Weapon = icons.Axe             , Type = icons.Jetpack }
 
 kMaxGunGameLevel = table.count(GunGameRewards)
 

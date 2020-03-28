@@ -19,16 +19,56 @@ if (Server) then
     function NS2Gamerules:BuildTeam(teamType)
         return GunGameTeam()
     end
-
+    
+    local function GetTeamSkills()
+        local averagePlayerSkills = {
+            [kMarineTeamType] = {},
+            [kAlienTeamType] = {},
+            [3] = {},
+        }
+        
+        for _, player in ipairs(GetEntitiesWithMixin("Scoring")) do
+            
+            local skill = player:GetPlayerSkill() and math.max(player:GetPlayerSkill(), 0)
+            -- DebugPrint("%s skill: %s", ToString(player:GetName()), ToString(skill))
+            
+            if skill then
+                
+                local teamType = HasMixin(player, "Team") and player:GetTeamType() or -1
+                if teamType == kMarineTeamType or teamType == kAlienTeamType then
+                    table.insert(averagePlayerSkills[teamType], skill)
+                end
+                
+                table.insert(averagePlayerSkills[3], skill)
+            
+            end
+        
+        end
+        
+        averagePlayerSkills[kMarineTeamType].mean = table.mean(averagePlayerSkills[kMarineTeamType])
+        averagePlayerSkills[kAlienTeamType].mean = table.mean(averagePlayerSkills[kAlienTeamType])
+        averagePlayerSkills[3].mean = table.mean(averagePlayerSkills[3])
+        
+        averagePlayerSkills[kMarineTeamType].median = table.median(averagePlayerSkills[kMarineTeamType])
+        averagePlayerSkills[kAlienTeamType].median = table.median(averagePlayerSkills[kAlienTeamType])
+        averagePlayerSkills[3].median = table.median(averagePlayerSkills[3])
+        
+        averagePlayerSkills[kMarineTeamType].standardDeviation = table.standardDeviation(averagePlayerSkills[kMarineTeamType])
+        averagePlayerSkills[kAlienTeamType].standardDeviation = table.standardDeviation(averagePlayerSkills[kAlienTeamType])
+        averagePlayerSkills[3].standardDeviation = table.standardDeviation(averagePlayerSkills[3])
+        
+        return averagePlayerSkills
+    end
     local ns2_EndGame = NS2Gamerules.EndGame
     function NS2Gamerules:EndGame(player)
         if GetGamerules():GetGameStarted() then
             
-            Shared.Message("Player " .. player:GetName() .. " wins GunGame round")
-            PostGameViz("GunGame Winner:" .. player:GetName())
-
             -- call it draw (internally)
             self:SetGameState(kGameState.Draw)
+    
+            Shared.Message("Player " .. player:GetName() .. " wins GunGame round")
+            PostGameViz("GunGame Winner:" .. player:GetName())
+        
             -- bloadcast custom network message that game ends
             SendGunGameEndNetworkMessage(player)
             
@@ -42,6 +82,18 @@ if (Server) then
             self.team1Lost = nil
             self.team2Lost = nil
             self.timeDrawWindowEnds = nil
+    
+            local entityList = Shared.GetEntitiesWithClassname("GameInfo")
+            if entityList:GetSize() > 0 then
+                local gameInfo = entityList:GetEntityAtIndex(0)
+                local gameLength = math.max( 0, math.floor(Shared.GetTime()) - gameInfo:GetStartTime() )
+        
+                gameInfo.prevTimeLength = gameLength
+                gameInfo.prevWinner = player:GetName()
+                gameInfo.prevTeamsSkills = GetTeamSkills()
+                --Client.showFeedback = true
+           
+            end
             
             -- Automatically end any performance logging when the round has ended.
             Shared.ConsoleCommand("p_endlog")

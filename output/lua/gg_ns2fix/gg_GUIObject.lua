@@ -633,6 +633,10 @@ end
 -- either "InstancePropertySetter", or "FakePropertySetter"
 local function PerformSetterDuties(self, propertyName, value, setter, altPropertyName, noEvent)
     
+    if value == nil then
+        return true
+    end
+    
     assert(value ~= nil)
     
     local prevValue = self:Get(propertyName)

@@ -1,10 +1,8 @@
 shader = "shaders/ExoMinigunView.surface_shader"
-
 albedoMap = "models/marine/exosuit/minigun_view.dds"
 normalMap = "models/marine/exosuit/minigun_view_normal.dds"
 specularMap = "models/marine/exosuit/minigun_view_spec.dds"
-
-
+emissiveMap = "models/marine/exosuit/minigun_view_illum.dds"
 modelColorMap = "models/marine/exosuit/minigun_view_colormap.dds"
 
 numColumns = 1

@@ -8,6 +8,11 @@ Script.Load("lua/gg_gui/GUIGunGameProgress.lua")
 
 class 'GUIPlayerResource'
 
+GUIPlayerResource.kTresTextFontName = Fonts.kAgencyFB_Small
+
+GUIPlayerResource.kTeam1TextPos = Vector(20, 360, 0)
+GUIPlayerResource.kTeam2TextPos = Vector(20, 540, 0)
+
 function CreatePlayerResourceDisplay(scriptHandle, hudLayer, frame, style)
     local result = GUIPlayerResource()
 	
