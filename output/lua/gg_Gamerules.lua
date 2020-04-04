@@ -59,6 +59,7 @@ if (Server) then
         
         return averagePlayerSkills
     end
+    
     local ns2_EndGame = NS2Gamerules.EndGame
     function NS2Gamerules:EndGame(player)
         if GetGamerules():GetGameStarted() then
