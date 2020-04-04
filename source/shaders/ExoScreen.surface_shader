@@ -81,7 +81,7 @@
                 material.emissive += 3 * ((1 - (blend + f)) * tex2D(scanlinesMap, input.texCoord * float2(1, 70)+ float2(0, time * -.75)).rgb * float3(2.2, 4.2, 6) );
             }
             
-            // Opacity
+            //Opacity
             material.opacity = opacity + f - 0.5;
 			
             if (material.opacity < 0.5)
